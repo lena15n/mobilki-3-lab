@@ -3,7 +3,25 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.lena.timetracker.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_the_most_frequent"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_the_biggest_total_time"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_total_time_by_selected_categories"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_total_time"
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never"/>
