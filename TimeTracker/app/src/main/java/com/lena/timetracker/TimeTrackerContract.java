@@ -34,21 +34,18 @@ public final class TimeTrackerContract {
                 NAME + TEXT_TYPE + " )";
         public static final String SQL_DELETE_CATEGORY = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-        public static final String SQL_INSERT_BASIC_CATEGORIES = "INSERT INTO " + TABLE_NAME +
-                " (" + NAME + ")" +
-                " VALUES (" + BASIC_WORK + "); \n" +
-                "INSERT INTO " + TABLE_NAME +
-                " (" + NAME + ")" +
-                " VALUES (" + BASIC_DINNER + "); \n" +
-                "INSERT INTO " + TABLE_NAME +
-                " (" + NAME + ")" +
-                " VALUES (" + BASIC_REST + "); \n" +
-                "INSERT INTO " + TABLE_NAME +
-                " (" + NAME + ")" +
-                " VALUES (" + BASIC_CLEANING + "); \n" +
-                "INSERT INTO " + TABLE_NAME +
-                " (" + NAME + ")" +
-                " VALUES (" + BASIC_SLEEP + "); \n";
+        public static final String SQL_INSERT_BASIC_CATEGORY_WORK = "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" + " VALUES ('" + BASIC_WORK + "'); \n";
+        public static final String SQL_INSERT_BASIC_CATEGORY_DINNER = "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" + " VALUES ('" + BASIC_DINNER + "'); \n";
+        public static final String SQL_INSERT_BASIC_CATEGORY_REST = "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" + " VALUES ('" + BASIC_REST + "'); \n";
+        public static final String SQL_INSERT_BASIC_CATEGORY_CLEANING = "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" + " VALUES ('" + BASIC_CLEANING + "'); \n";
+        public static final String SQL_INSERT_BASIC_CATEGORY_SLEEP = "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" + " VALUES ('" + BASIC_SLEEP + "'); \n";
+
+
 
         private Category (){}
     }
