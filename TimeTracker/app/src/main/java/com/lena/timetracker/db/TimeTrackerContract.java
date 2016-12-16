@@ -57,10 +57,14 @@ public final class TimeTrackerContract {
         public static final String DESCRIPTION = "description";
         public static final String START_TIME = "start";
         public static final String END_TIME = "end";
-        public static final String CATEGORY_ID = "category";
+        public static final String CATEGORY_ID = "category_id";
         public static final String TIME = "time";
 
-        private static final String TEMP_TABLE_NAME = "temp";
+        public static final String TEMP_TABLE_NAME = "temp";
+        public static final String TEMP_PHOTO_ID = "id_photo";
+        public static final String TEMP_RECORD_ID = "id_record";
+        public static final String TEMP_CATEGORY_ID = "id_category";
+
 
         public static final String SQL_CREATE_RECORD = "CREATE TABLE " +
                 TABLE_NAME + " (" +
@@ -70,6 +74,31 @@ public final class TimeTrackerContract {
                 END_TIME + TEXT_TYPE + COMMA_SEP +
                 CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
                 TIME + INTEGER_TYPE + " )";
+
+        public static final String SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2 = "SELECT " +
+                DESCRIPTION + COMMA_SEP +
+                START_TIME + COMMA_SEP +
+                END_TIME + COMMA_SEP +
+                TIME + COMMA_SEP +
+                TEMP_RECORD_ID + COMMA_SEP +
+                TEMP_PHOTO_ID + COMMA_SEP +
+                Photo.URI + COMMA_SEP +
+                Category.NAME +
+                " FROM (" +
+                "SELECT " +
+                    TABLE_NAME + "." + DESCRIPTION + COMMA_SEP +
+                    TABLE_NAME + "." + CATEGORY_ID + COMMA_SEP +
+                    TABLE_NAME + "." + START_TIME + COMMA_SEP +
+                    TABLE_NAME + "." + END_TIME + COMMA_SEP +
+                    TABLE_NAME + "." + TIME + COMMA_SEP +
+                    TABLE_NAME + "." + _ID + " AS " + TEMP_RECORD_ID + COMMA_SEP +
+                    Photo.TABLE_NAME + "." + Photo._ID + " AS " + TEMP_PHOTO_ID + COMMA_SEP +
+                    Photo.TABLE_NAME + "." + Photo.URI +
+                " FROM " + TABLE_NAME + " LEFT JOIN " + Photo.TABLE_NAME +
+                " ON " + TABLE_NAME + "." + _ID + " = " + Photo.TABLE_NAME + "." + Photo.RECORD_ID +
+                ") AS " + TEMP_TABLE_NAME +
+                " LEFT JOIN " + Category.TABLE_NAME +
+                " ON " + TEMP_TABLE_NAME  + "." + CATEGORY_ID + " = " + Category.TABLE_NAME + "." + Category._ID;
 
         public static final String SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES = "SELECT * FROM (" +
                 "SELECT * FROM " + TABLE_NAME + " LEFT JOIN " + Photo.TABLE_NAME +
@@ -86,7 +115,7 @@ public final class TimeTrackerContract {
     public static final class Photo implements BaseColumns {
         public static final String TABLE_NAME      = "photo";
         public static final String URI = "uri";
-        public static final String RECORD_ID = "name";
+        public static final String RECORD_ID = "record_id";
 
         public static final String SQL_CREATE_PHOTO = "CREATE TABLE " +
                 TABLE_NAME + " (" +

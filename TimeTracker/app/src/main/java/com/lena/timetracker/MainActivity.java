@@ -147,26 +147,25 @@ public class MainActivity extends AppCompatActivity {
         String sortOrder =
                 TimeTrackerContract.Record._ID + " ASC";
 
-        Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES,
+        Log.d("Mim", TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2);
+        Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2,
                 new String[]{});
 
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                   /* long id = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record._ID));
+                    long id = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_RECORD_ID));
                     String desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.DESCRIPTION));
-                    String cat = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.CATEGORY_ID));
                     String start = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.START_TIME));
                     String end = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.END_TIME));
                     String time = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.TIME));
-*/
-                    //String catName = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
+                    String categoryName = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
+                    long photoId = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_PHOTO_ID));
+                    String photoUri = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Photo.URI));
 
-                    /*long idRec = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record._ID));
-                    long idCat = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Category._ID));
-                    long idPh = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Photo._ID));
-
-                    Log.d("Mi", "Record: idr = " + idRec + ", idca: " + idCat + ", idp: " + idPh);*/
+                    Log.d("Mir", "Record: id = " + id + ", desc: " + desc + ", start: " + start +
+                    ", end: " + end + ", time: " + time + ", catName: " + categoryName + ", photoId: " +
+                    photoId + ", uri: " + photoUri);
 
                     String str = "";
                     for (String cn : cursor.getColumnNames()) {

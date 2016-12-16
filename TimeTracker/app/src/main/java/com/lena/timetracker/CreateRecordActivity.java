@@ -236,7 +236,6 @@ public class CreateRecordActivity extends AppCompatActivity  {
                     long id = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Category._ID));
                     String name = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
                     categories.add(new DOCategory(id, name));
-                    Log.d("Mi", "Categories: id = " + id + ", name: " + name);
                 }
                 while (cursor.moveToNext());
             }
