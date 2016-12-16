@@ -1,5 +1,6 @@
 package com.lena.timetracker;
 
+import android.app.FragmentManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -10,12 +11,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.lena.timetracker.dataobjects.DOCategory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CreateRecordActivity extends AppCompatActivity {
+    private Date startTime;
+    private Date endTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +31,27 @@ public class CreateRecordActivity extends AppCompatActivity {
         Spinner prioritiesSpinner = (Spinner) findViewById(R.id.create_record_category_spinner);
         ArrayList<DOCategory> categories = getCategoriesFromDb();
         ArrayAdapter<DOCategory> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
-        //ArrayAdapter arrayAdapter = ArrayAdapter.createFromResource(this, R.array.priorities, R.layout.spinner_item);
         prioritiesSpinner.setAdapter(arrayAdapter);
+
+        TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
+        startTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                TimePickerFragment timePickerFragment = new TimePickerFragment();
+                timePickerFragment.show(fragmentManager, getString(R.string.record_start));
+            }
+        });
+
+        TextView endTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
+        endTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getFragmentManager();
+                TimePickerFragment datePickerFragment = new TimePickerFragment();
+                datePickerFragment.show(fragmentManager, getString(R.string.record_end));
+            }
+        });
 
         Button createButton = (Button) findViewById(R.id.create_record_button);
         createButton.setOnClickListener(new View.OnClickListener() {
@@ -95,5 +120,40 @@ public class CreateRecordActivity extends AppCompatActivity {
         db.close();
 
         return categories;
+    }
+
+    public void onStartTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(0, 0, 0, hourOfDay, minute);
+        startTime = calendar.getTime();
+        String hourString = Integer.toString(hourOfDay);
+        String minuteString = Integer.toString(minute);
+
+        if (hourOfDay < 10) {
+            hourString = "0" + hourString;
+        }
+        if (minute < 10) {
+            minuteString = "0" + minuteString;
+        }
+
+        TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
+        startTextView.setText(hourString + ":" + minuteString);
+    }
+
+    public void onEndTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(0, 0, 0, hourOfDay, minute);
+        endTime = calendar.getTime();
+        String hourString = Integer.toString(hourOfDay);
+        String minuteString = Integer.toString(minute);
+        if (hourOfDay < 10) {
+            hourString = "0" + hourString;
+        }
+        if (minute < 10) {
+            minuteString = "0" + minuteString;
+        }
+
+        TextView endTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
+        endTextView.setText(hourString + ":" + minuteString);
     }
 }
