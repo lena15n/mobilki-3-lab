@@ -1,17 +1,13 @@
 package com.lena.timetracker;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-
-import static com.lena.timetracker.TimeTrackerContract.FeedEntry.COLUMN_NAME_TITLE;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,8 +18,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), CreateRecordActivity.class);
+                startActivity(intent);
+            }
+        });
 
+        TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
+        /*
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String title = "My new title!";
@@ -78,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textView = (TextView) findViewById(R.id.main_header);
         textView.setText(num + " azzza");
-        db1.close();
+        db1.close(); */
+
+
        /* cursor.moveToFirst();
         long itemId = 0;
         itemId = cursor.getLong(

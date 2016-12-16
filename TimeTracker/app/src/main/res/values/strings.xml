@@ -1,6 +1,21 @@
 <resources>
     <string name="app_name">TimeTracker</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_the_most_frequent">The most frequent activities</string>
+    <string name="action_the_biggest_total_time">The biggest total time of all categories</string>
+    <string name="action_total_time_by_selected_categories">The biggest total time by selected categories</string>
+    <string name="action_total_time">The total time of all categories</string>
 
-    <string name="main_header">Settings</string>
+    <string name="main_header">Statistics</string>
+
+    <string name="create_record">Create new record</string>
+    <string name="create_record_button">Create</string>
+
+    <string name="record_description">Description: </string>
+    <string name="record_category">Category: </string>
+    <string name="record_start">Start time: </string>
+    <string name="record_end">End time: </string>
+    <string name="record_tap_to_set_start">(Tap to set start time)</string>
+    <string name="record_tap_to_set_end">(Tap to set end time)</string>
+    <string name="record_photo">Photo: </string>
+
 </resources>

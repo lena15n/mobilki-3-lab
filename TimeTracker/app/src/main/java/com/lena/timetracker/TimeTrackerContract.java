@@ -18,31 +18,37 @@ public final class TimeTrackerContract {
     // make the constructor private.
     private TimeTrackerContract() {}
 
-    /* Inner class that defines the table contents */
-    public static final class FeedEntry implements BaseColumns {
-        public static final String TABLE_NAME = "entry";
-        public static final String COLUMN_NAME_TITLE = "title";
-        public static final String COLUMN_NAME_SUBTITLE = "subtitle";
-
-        protected static final String SQL_CREATE_ENTRIES =
-                "CREATE TABLE " + TimeTrackerContract.FeedEntry.TABLE_NAME + " (" +
-                        TimeTrackerContract.FeedEntry._ID + " INTEGER PRIMARY KEY," +
-                        TimeTrackerContract.FeedEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                        TimeTrackerContract.FeedEntry.COLUMN_NAME_SUBTITLE + TEXT_TYPE + " )";
-
-        private static final String SQL_DELETE_ENTRIES =
-                "DROP TABLE IF EXISTS " + TimeTrackerContract.FeedEntry.TABLE_NAME;
-    }
-
     public static final class Category implements BaseColumns {
         public static final String TABLE_NAME       = "category";
         public static final String NAME = "name";
+        public static final String BASIC_WORK = "Work";
+        public static final String BASIC_DINNER = "Dinner";
+        public static final String BASIC_REST = "Rest";
+        public static final String BASIC_CLEANING = "Cleaning";
+        public static final String BASIC_SLEEP = "Sleep";
+
 
         public static final String SQL_CREATE_CATEGORY = "CREATE TABLE " +
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY," +
                 NAME + TEXT_TYPE + " )";
         public static final String SQL_DELETE_CATEGORY = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+        public static final String SQL_INSERT_BASIC_CATEGORIES = "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" +
+                " VALUES (" + BASIC_WORK + "); \n" +
+                "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" +
+                " VALUES (" + BASIC_DINNER + "); \n" +
+                "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" +
+                " VALUES (" + BASIC_REST + "); \n" +
+                "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" +
+                " VALUES (" + BASIC_CLEANING + "); \n" +
+                "INSERT INTO " + TABLE_NAME +
+                " (" + NAME + ")" +
+                " VALUES (" + BASIC_SLEEP + "); \n";
 
         private Category (){}
     }
