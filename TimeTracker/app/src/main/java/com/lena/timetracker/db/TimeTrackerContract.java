@@ -15,6 +15,7 @@ public final class TimeTrackerContract {
 
 
 
+
     // To prevent someone from accidentally instantiating the contract class,
     // make the constructor private.
     private TimeTrackerContract() {}
@@ -56,8 +57,10 @@ public final class TimeTrackerContract {
         public static final String DESCRIPTION = "description";
         public static final String START_TIME = "start";
         public static final String END_TIME = "end";
-        public static final String CATEGORY = "category";
+        public static final String CATEGORY_ID = "category";
         public static final String TIME = "time";
+
+        private static final String TEMP_TABLE_NAME = "temp";
 
         public static final String SQL_CREATE_RECORD = "CREATE TABLE " +
                 TABLE_NAME + " (" +
@@ -65,8 +68,16 @@ public final class TimeTrackerContract {
                 DESCRIPTION + TEXT_TYPE + COMMA_SEP +
                 START_TIME + TEXT_TYPE + COMMA_SEP +
                 END_TIME + TEXT_TYPE + COMMA_SEP +
-                CATEGORY + INTEGER_TYPE + COMMA_SEP +
+                CATEGORY_ID + INTEGER_TYPE + COMMA_SEP +
                 TIME + INTEGER_TYPE + " )";
+
+        public static final String SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES = "SELECT * FROM (" +
+                "SELECT * FROM " + TABLE_NAME + " LEFT JOIN " + Photo.TABLE_NAME +
+                " ON " + TABLE_NAME + "." + _ID + " = " + Photo.TABLE_NAME + "." + Photo.RECORD_ID +
+                ") AS " + TEMP_TABLE_NAME +
+                " LEFT JOIN " + Category.TABLE_NAME +
+                " ON " + TEMP_TABLE_NAME  + "." + CATEGORY_ID + " = " + Category.TABLE_NAME + "." + Category._ID;
+
         public static final String SQL_DELETE_RECORD = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         private Record (){}

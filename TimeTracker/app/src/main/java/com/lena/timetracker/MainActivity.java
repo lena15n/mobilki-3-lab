@@ -1,14 +1,18 @@
 package com.lena.timetracker;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.lena.timetracker.db.TimeTrackerContract;
 import com.lena.timetracker.db.TimeTrackerDbHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,8 +33,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
-        /*
+        prepareRecordsToShow();
+
+        /*TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
+
         // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String title = "My new title!";
@@ -125,42 +131,52 @@ public class MainActivity extends AppCompatActivity {
             */
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //select records from db
-      /*  ListView meetingsListView = (ListView) findViewById(R.id.all_records_listview);
-        if (meetingsListView != null) {
-            final ArrayAdapter<Meeting> arrayAdapter = new ArrayAdapter<Meeting>(this,
-                    android.R.layout.simple_list_item_2, android.R.id.text1, meetings) {
-                @NonNull
-                @Override
-                public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getView(position, convertView, parent);
-                    TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                    TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+    private void prepareRecordsToShow() {
+        TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String[] projection = {
+                TimeTrackerContract.Record._ID,
+                TimeTrackerContract.Record.DESCRIPTION,
+                TimeTrackerContract.Record.CATEGORY_ID,
+                TimeTrackerContract.Record.START_TIME,
+                TimeTrackerContract.Record.END_TIME,
+                TimeTrackerContract.Record.TIME
+        };
 
-                    text1.setText(meetings.get(position).getName());
-                    text2.setText(meetings.get(position).getDescription());
-                    return view;
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                TimeTrackerContract.Record._ID + " ASC";
+
+        Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES,
+                new String[]{});
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                do {
+                   /* long id = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record._ID));
+                    String desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.DESCRIPTION));
+                    String cat = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.CATEGORY_ID));
+                    String start = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.START_TIME));
+                    String end = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.END_TIME));
+                    String time = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.TIME));
+*/
+                    //String catName = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
+
+                    /*long idRec = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record._ID));
+                    long idCat = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Category._ID));
+                    long idPh = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Photo._ID));
+
+                    Log.d("Mi", "Record: idr = " + idRec + ", idca: " + idCat + ", idp: " + idPh);*/
+
+                    String str = "";
+                    for (String cn : cursor.getColumnNames()) {
+                        str = str.concat(cn + " = " + cursor.getString(cursor.getColumnIndex(cn)) + "; ");
+                    }
+                    Log.d("Min", str);
                 }
-            };
-
-            meetingsListView.setAdapter(arrayAdapter);
-            meetingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
-                    Meeting currentMeeting = arrayAdapter.getItem(position);
-
-                    Context context = getApplicationContext();
-                    Intent intent = new Intent(context, ShowRecordActivity.class);
-                    Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
-                    intent.putExtra(context.getString(R.string.meeting), gson.toJson(currentMeeting));
-                    startActivity(intent);
-                }
-            });
-        }*/
-
+                while (cursor.moveToNext());
+            }
+        }
     }
 
     @Override

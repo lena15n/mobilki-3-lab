@@ -49,7 +49,7 @@ public class CreateRecordActivity extends AppCompatActivity  {
         ArrayAdapter<DOCategory> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
         prioritiesSpinner.setAdapter(arrayAdapter);
 
-        TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
+        final TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
         startTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +82,9 @@ public class CreateRecordActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 prepareDataAndInsertIntoDb();
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -101,7 +104,7 @@ public class CreateRecordActivity extends AppCompatActivity  {
         //insert into Record
         ContentValues values = new ContentValues();
         values.put(TimeTrackerContract.Record.DESCRIPTION, desc);
-        values.put(TimeTrackerContract.Record.CATEGORY, category.getId());
+        values.put(TimeTrackerContract.Record.CATEGORY_ID, category.getId());
         values.put(TimeTrackerContract.Record.START_TIME, startTime.toString());
         values.put(TimeTrackerContract.Record.END_TIME, endTime.toString());
         values.put(TimeTrackerContract.Record.TIME, time);
@@ -126,7 +129,7 @@ public class CreateRecordActivity extends AppCompatActivity  {
         String[] projection = {
                 TimeTrackerContract.Record._ID,
                 TimeTrackerContract.Record.DESCRIPTION,
-                TimeTrackerContract.Record.CATEGORY,
+                TimeTrackerContract.Record.CATEGORY_ID,
                 TimeTrackerContract.Record.START_TIME,
                 TimeTrackerContract.Record.END_TIME,
                 TimeTrackerContract.Record.TIME
@@ -151,7 +154,7 @@ public class CreateRecordActivity extends AppCompatActivity  {
                 do {
                     long id = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record._ID));
                     String desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.DESCRIPTION));
-                    String cat = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.CATEGORY));
+                    String cat = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.CATEGORY_ID));
                     String start = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.START_TIME));
                     String end = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.END_TIME));
                     String time = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.TIME));
