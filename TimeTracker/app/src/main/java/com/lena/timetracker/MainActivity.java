@@ -9,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.lena.timetracker.db.TimeTrackerDbHelper;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override

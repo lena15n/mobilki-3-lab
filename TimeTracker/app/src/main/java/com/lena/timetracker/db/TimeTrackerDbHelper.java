@@ -1,22 +1,22 @@
-package com.lena.timetracker;
+package com.lena.timetracker.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_CREATE_CATEGORY;
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_DELETE_CATEGORY;
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_CLEANING;
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_WORK;
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_SLEEP;
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_REST;
-import static com.lena.timetracker.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_DINNER;
-import static com.lena.timetracker.TimeTrackerContract.DATABASE_NAME;
-import static com.lena.timetracker.TimeTrackerContract.DATABASE_VERSION;
-import static com.lena.timetracker.TimeTrackerContract.Photo.SQL_CREATE_PHOTO;
-import static com.lena.timetracker.TimeTrackerContract.Photo.SQL_DELETE_PHOTO;
-import static com.lena.timetracker.TimeTrackerContract.Record.SQL_CREATE_RECORD;
-import static com.lena.timetracker.TimeTrackerContract.Record.SQL_DELETE_RECORD;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_CREATE_CATEGORY;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_DELETE_CATEGORY;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_CLEANING;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_WORK;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_SLEEP;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_REST;
+import static com.lena.timetracker.db.TimeTrackerContract.Category.SQL_INSERT_BASIC_CATEGORY_DINNER;
+import static com.lena.timetracker.db.TimeTrackerContract.DATABASE_NAME;
+import static com.lena.timetracker.db.TimeTrackerContract.DATABASE_VERSION;
+import static com.lena.timetracker.db.TimeTrackerContract.Photo.SQL_CREATE_PHOTO;
+import static com.lena.timetracker.db.TimeTrackerContract.Photo.SQL_DELETE_PHOTO;
+import static com.lena.timetracker.db.TimeTrackerContract.Record.SQL_CREATE_RECORD;
+import static com.lena.timetracker.db.TimeTrackerContract.Record.SQL_DELETE_RECORD;
 
 public class TimeTrackerDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.

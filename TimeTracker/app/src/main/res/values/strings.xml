@@ -18,5 +18,6 @@
     <string name="record_tap_to_set_start">(Tap to set start time)</string>
     <string name="record_tap_to_set_end">(Tap to set end time)</string>
     <string name="record_photo">Photo: </string>
+    <string name="record_attach">Attach</string>
 
 </resources>
