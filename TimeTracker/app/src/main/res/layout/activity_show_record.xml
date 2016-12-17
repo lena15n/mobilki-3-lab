@@ -106,7 +106,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="13dp"/>
+                    android:ems="13"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"/>
 
             </RelativeLayout>
 
@@ -132,7 +134,36 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginBottom="13dp"/>
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:ems="13"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layouts41"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layouts4"
+                android:paddingBottom="16dp">
+
+                <TextView
+                    android:id="@+id/show_record_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingEnd="8dp"
+                    android:text="@string/record_time"/>
+
+                <TextView
+                    android:id="@+id/show_record_set_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:ems="13"/>
 
             </RelativeLayout>
 
@@ -142,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="false"
-                android:layout_below="@+id/layouts4"
+                android:layout_below="@+id/layouts41"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp">
 

@@ -26,6 +26,6 @@
         android:id="@+id/all_records_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_="@id/main_header"
+        android:layout_below="@id/main_header"
         android:paddingTop="30dp"/>
 </RelativeLayout>
