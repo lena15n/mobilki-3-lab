@@ -18,12 +18,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="Hello World!"
+        android:text="@string/app_header"
+        style="@style/FontHeader"
         android:id="@+id/main_header"/>
 
     <ListView
         android:id="@+id/all_records_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/main_header"/>
+        android:layout_="@id/main_header"
+        android:paddingTop="30dp"/>
 </RelativeLayout>

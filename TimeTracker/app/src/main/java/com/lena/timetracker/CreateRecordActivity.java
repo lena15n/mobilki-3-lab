@@ -26,6 +26,8 @@ import com.lena.timetracker.db.TimeTrackerDbHelper;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -96,7 +98,7 @@ public class CreateRecordActivity extends AppCompatActivity  {
         DOCategory category = (DOCategory) spinner.getSelectedItem();
         Log.d("Mi", "Record: " + desc + ", categ: id = " + category.getId() + ", name: " + category.getName());
         long time = getTimeDiff(startTime, endTime);
-
+        DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
 
         TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -105,8 +107,8 @@ public class CreateRecordActivity extends AppCompatActivity  {
         ContentValues values = new ContentValues();
         values.put(TimeTrackerContract.Record.DESCRIPTION, desc);
         values.put(TimeTrackerContract.Record.CATEGORY_ID, category.getId());
-        values.put(TimeTrackerContract.Record.START_TIME, startTime.toString());
-        values.put(TimeTrackerContract.Record.END_TIME, endTime.toString());
+        values.put(TimeTrackerContract.Record.START_TIME, dateFormat.format(startTime));
+        values.put(TimeTrackerContract.Record.END_TIME, dateFormat.format(endTime));
         values.put(TimeTrackerContract.Record.TIME, time);
         long newRecordId = db.insert(TimeTrackerContract.Record.TABLE_NAME, null, values);
 

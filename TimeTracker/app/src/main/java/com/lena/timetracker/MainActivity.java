@@ -1,9 +1,11 @@
 package com.lena.timetracker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,11 +13,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.lena.timetracker.dataobjects.CustomRecordObject;
 import com.lena.timetracker.db.TimeTrackerContract;
 import com.lena.timetracker.db.TimeTrackerDbHelper;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
+    private ArrayAdapter<CustomRecordObject> arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        prepareRecordsToShow();
+        showRecords(prepareRecordsToShow());
 
         /*TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
 
@@ -131,7 +148,39 @@ public class MainActivity extends AppCompatActivity {
             */
     }
 
-    private void prepareRecordsToShow() {
+    private void showRecords(final ArrayList<CustomRecordObject> records) {
+         arrayAdapter = new ArrayAdapter<CustomRecordObject>(this,
+                android.R.layout.simple_list_item_2, android.R.id.text1, records) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
+                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+
+                text1.setText(records.get(position).getDesc());
+                text2.setText(records.get(position).getCategory());
+                return view;
+            }
+        };
+
+        ListView allRecordsListView = (ListView) findViewById(R.id.all_records_listview);
+        allRecordsListView.setAdapter(arrayAdapter);
+        allRecordsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
+                CustomRecordObject record = arrayAdapter.getItem(position);
+
+                Context context = getApplicationContext();
+                Intent intent = new Intent(context, ShowRecordActivity.class);
+                Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
+                intent.putExtra(context.getString(R.string.record), gson.toJson(record));
+                startActivity(intent);
+            }
+        });
+    }
+
+    private ArrayList<CustomRecordObject> prepareRecordsToShow() {
         TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
@@ -151,21 +200,55 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2,
                 new String[]{});
 
+        ArrayList<CustomRecordObject> records = null;
+
         if (cursor != null) {
+            long prevId = -1;
+            records = new ArrayList<>();
+
             if (cursor.moveToFirst()) {
                 do {
                     long id = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_RECORD_ID));
                     String desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.DESCRIPTION));
                     String start = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.START_TIME));
                     String end = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.END_TIME));
-                    String time = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.TIME));
+                    long time = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TIME));
                     String categoryName = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
                     long photoId = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_PHOTO_ID));
                     String photoUri = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Photo.URI));
 
+                    if (prevId == id) {
+                        int index = records.size() - 1;
+                        CustomRecordObject record = records.get(index);
+                        HashMap<Long, String> photos = record.getPhotos();
+                        photos.put(photoId, photoUri);
+                        record.setPhotos(photos);
+                        records.set(index, record);
+                    } else {
+                        HashMap<Long, String> photos = null;
+
+                        if (photoUri != null) {
+                            photos = new HashMap<>();
+                            photos.put(photoId, photoUri);
+                        }
+                        DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+
+                        CustomRecordObject record = null;
+                        try {
+                            record = new CustomRecordObject(id, desc, categoryName,
+                                    dateFormat.parse(start), dateFormat.parse(end), time, photos);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        records.add(record);
+                        prevId = id;
+                    }
+
+
                     Log.d("Mir", "Record: id = " + id + ", desc: " + desc + ", start: " + start +
-                    ", end: " + end + ", time: " + time + ", catName: " + categoryName + ", photoId: " +
-                    photoId + ", uri: " + photoUri);
+                            ", end: " + end + ", time: " + time + ", catName: " + categoryName + ", photoId: " +
+                            photoId + ", uri: " + photoUri);
 
                     String str = "";
                     for (String cn : cursor.getColumnNames()) {
@@ -176,6 +259,22 @@ public class MainActivity extends AppCompatActivity {
                 while (cursor.moveToNext());
             }
         }
+
+        /*if (records != null)
+        {
+            for (CustomRecordObject rec : records) {
+                String str = "Photos: ";
+
+                for (Map.Entry<Long, String> entry : rec.getPhotos().entrySet()) {
+                    str = str + "id: " + entry.getKey() + ", uri: " + entry.getValue() + "; ";
+                }
+
+                Log.d("Mimi", "Record: id = " + rec.getId() + ", desc: " + rec.getDesc() + ", start: " + rec.getStartTime() +
+                        ", end: " + rec.getEndTime() + ", time: " + rec.getTime() + ", catName: " + rec.getCategory() + str);
+            }
+        }*/
+
+        return records;
     }
 
     @Override

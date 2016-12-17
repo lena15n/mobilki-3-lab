@@ -37,7 +37,7 @@
                 android:paddingBottom="16dp">
 
                 <TextView
-                    android:id="@+id/create_record_desc_textview"
+                    android:id="@+id/record_desc_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -67,7 +67,7 @@
                 >
 
                 <TextView
-                    android:id="@+id/create_record_category_textview"
+                    android:id="@+id/record_category_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
