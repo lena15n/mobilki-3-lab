@@ -35,14 +35,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class CreateOrEditRecordActivity extends AppCompatActivity  {
+public class CreateOrEditRecordActivity extends AppCompatActivity {
     private static final int ATTACH_PHOTO = 1;
     private Date startTime;
     private Date endTime;
-    private ArrayList<String> photoPathes;
     private String mode;
+    private CustomRecordObject record;
+    private ArrayList<String> photoPathes;
     private ArrayList<DOCategory> categories;
 
     @Override
@@ -93,10 +95,9 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
             }
         });
 
-        if (getIntent().getBooleanExtra(getString(R.string.edit_activity), false)){
+        if (getIntent().getBooleanExtra(getString(R.string.edit_activity), false)) {
             mode = getString(R.string.mode_edit);
-        }
-        else {
+        } else {
             mode = getString(R.string.mode_create);
         }
 
@@ -125,14 +126,14 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
             });
         }
 
-        if (mode.equals(getString(R.string.mode_edit))){
+        if (mode.equals(getString(R.string.mode_edit))) {
             prepareEditActivity(getIntent().getStringExtra(getString(R.string.edit_meeting_json)));
         }
     }
 
     private void prepareEditActivity(String json) {
         Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
-        CustomRecordObject record = gson.fromJson(json, CustomRecordObject.class);
+        record = gson.fromJson(json, CustomRecordObject.class);
 
         EditText descEditText = (EditText) findViewById(R.id.create_record_desc_edittext);
         descEditText.setText(record.getDesc());
@@ -140,7 +141,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
         Spinner categorySpinner = (Spinner) findViewById(R.id.create_record_category_spinner);
         DOCategory chosenCategory = null;
         for (DOCategory category : categories) {
-            if (category.getName().equals(record.getCategory())){
+            if (category.getName().equals(record.getCategory())) {
                 chosenCategory = category;
             }
         }
@@ -149,8 +150,10 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
         startTextView.setText(format.format(record.getStartTime()));
+        startTime = record.getStartTime();
         TextView endTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
         endTextView.setText(format.format(record.getEndTime()));
+        endTime = record.getEndTime();
 
         for (String photoPath : record.getPhotos().values()) {
             addImageOnViewByUri(Uri.parse(photoPath));
@@ -159,14 +162,51 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
 
     private void updateDb() {
         //prepare
+        String desc = ((TextView) findViewById(R.id.create_record_desc_edittext)).getText().toString();
+        Spinner spinner = ((Spinner) findViewById(R.id.create_record_category_spinner));
+        DOCategory category = (DOCategory) spinner.getSelectedItem();
+        Log.d("Mi", "Record: " + desc + ", categ: id = " + category.getId() + ", name: " + category.getName());
+        long time = getTimeDiff(startTime, endTime);
+        DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
 
+        TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
+        //insert into Record
+        ContentValues values = new ContentValues();
+        values.put(TimeTrackerContract.Record.DESCRIPTION, desc);
+        values.put(TimeTrackerContract.Record.CATEGORY_ID, category.getId());
+        values.put(TimeTrackerContract.Record.START_TIME, dateFormat.format(startTime));
+        values.put(TimeTrackerContract.Record.END_TIME, dateFormat.format(endTime));
+        values.put(TimeTrackerContract.Record.TIME, time);
+        String where = TimeTrackerContract.Record._ID + " = " + record.getId();
+        long newRecordId = db.update(TimeTrackerContract.Record.TABLE_NAME, values, where, null);
+        Log.d("Mix", "update record row with id: " + record.getId());
+
+        //remove from Photo
+        for (Map.Entry<Long, String> oldPath : record.getPhotos().entrySet()) {
+            where = TimeTrackerContract.Photo._ID + " = " + oldPath.getKey();
+            newRecordId = db.delete(TimeTrackerContract.Photo.TABLE_NAME, where, null);
+            Log.d("Mix", "delete photo row with id: " + oldPath.getKey());
+        }
+
+        //insert into Photo
+        for (String path : photoPathes) {
+            values = new ContentValues();
+            values.put(TimeTrackerContract.Photo.URI, path);
+            values.put(TimeTrackerContract.Photo.RECORD_ID, record.getId());
+            long newPhotoId = db.insert(TimeTrackerContract.Photo.TABLE_NAME, null, values);
+            Log.d("Mix", "create photo row with id: " + newPhotoId);
+        }
+
+        db.close();
+        verify();
     }
 
     private void insertIntoDb() {
         //prepare
         String desc = ((TextView) findViewById(R.id.create_record_desc_edittext)).getText().toString();
-        Spinner spinner = ((Spinner)findViewById(R.id.create_record_category_spinner));
+        Spinner spinner = ((Spinner) findViewById(R.id.create_record_category_spinner));
         DOCategory category = (DOCategory) spinner.getSelectedItem();
         Log.d("Mi", "Record: " + desc + ", categ: id = " + category.getId() + ", name: " + category.getName());
         long time = getTimeDiff(startTime, endTime);
@@ -233,9 +273,8 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
                     String time = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.TIME));
 
 
-
                     Log.d("Mi", "Record: id = " + id + ", name: " + desc + ", cat: " + cat +
-                    "\nstart: " + start + ",end: " + end + ", time: " + time);
+                            "\nstart: " + start + ",end: " + end + ", time: " + time);
                 }
                 while (cursor.moveToNext());
             }
@@ -373,7 +412,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
         pickIntent.setType("image/*");
 
         Intent chooserIntent = Intent.createChooser(getIntent, "Select PImage");
-        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickIntent});
 
         startActivityForResult(chooserIntent, ATTACH_PHOTO);
     }
@@ -391,7 +430,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
         }
     }
 
-    private void addImageOnViewByUri(Uri uri){
+    private void addImageOnViewByUri(Uri uri) {
         InputStream imageStream = null;
         try {
             imageStream = getContentResolver().openInputStream(uri);
@@ -412,6 +451,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
 
     /**
      * Get a diff between two dates
+     *
      * @param date1 the oldest date
      * @param date2 the newest date
      * @return the diff value in minutes
