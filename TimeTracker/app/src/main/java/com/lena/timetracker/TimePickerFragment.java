@@ -25,10 +25,10 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         if (getTag().equals(getString(R.string.record_start))) {
-            ((CreateRecordActivity) getActivity()).onStartTimeSet(view, hourOfDay, minute);
+            ((CreateOrEditRecordActivity) getActivity()).onStartTimeSet(view, hourOfDay, minute);
         }
         else if (getTag().equals(getString(R.string.record_end))) {
-            ((CreateRecordActivity) getActivity()).onEndTimeSet(view, hourOfDay, minute);
+            ((CreateOrEditRecordActivity) getActivity()).onEndTimeSet(view, hourOfDay, minute);
         }
     }
 }

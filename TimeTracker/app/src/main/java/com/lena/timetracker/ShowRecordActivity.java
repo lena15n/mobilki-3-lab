@@ -3,6 +3,7 @@ package com.lena.timetracker;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -19,6 +20,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lena.timetracker.dataobjects.CustomRecordObject;
+import com.lena.timetracker.db.TimeTrackerContract;
+import com.lena.timetracker.db.TimeTrackerDbHelper;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -35,7 +38,7 @@ public class ShowRecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_record);
 
-        String json = getIntent().getStringExtra(getString(R.string.record));
+        final String json = getIntent().getStringExtra(getString(R.string.record));
         if (json != null) {
             record = getRecordFromJSON(json);
             updateMeetingView(record);
@@ -45,7 +48,7 @@ public class ShowRecordActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editRecord(record);
+                editRecord(json);
             }
         });
 
@@ -128,21 +131,15 @@ public class ShowRecordActivity extends AppCompatActivity {
                                            String permissions[], int[] grantResults) {
         switch (requestCode) {
             case REQUEST_PERMISSION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted
                     showImages();
                 } else {
-
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                 }
                 return;
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 
@@ -180,11 +177,25 @@ public class ShowRecordActivity extends AppCompatActivity {
         textView.setText(hourString + ":" + minuteString);
     }
 
-    private void editRecord(CustomRecordObject record) {
-
+    private void editRecord(String json) {
+        Intent intent = new Intent(this, CreateOrEditRecordActivity.class);
+        intent.putExtra(getString(R.string.edit_activity), true);
+        intent.putExtra(getString(R.string.edit_meeting_json), json);
+        startActivity(intent);
     }
 
     private void deleteRecord(CustomRecordObject record) {
+        TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        for (Map.Entry<Long, String> photo : record.getPhotos().entrySet()) {
+            int delCount = db.delete(TimeTrackerContract.Photo.TABLE_NAME,
+                    TimeTrackerContract.Photo._ID + " = " + photo.getKey(), null);
+        }
 
+        int delCount = db.delete(TimeTrackerContract.Record.TABLE_NAME,
+                TimeTrackerContract.Record._ID + " = " + record.getId(), null);
+
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

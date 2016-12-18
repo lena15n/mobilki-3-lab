@@ -14,12 +14,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.lena.timetracker.dataobjects.CustomRecordObject;
 import com.lena.timetracker.dataobjects.DOCategory;
 import com.lena.timetracker.db.TimeTrackerContract;
 import com.lena.timetracker.db.TimeTrackerDbHelper;
@@ -38,20 +42,18 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
     private Date startTime;
     private Date endTime;
     private ArrayList<String> photoPathes;
+    private String mode;
+    private ArrayList<DOCategory> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_record);
 
-        if (getIntent().getBooleanExtra(getString(R.string.edit_activity), false)){
-            prepareEditDataAndUpdateDb(getIntent().getStringExtra(getString(R.string.edit_activity)));
-        }
-
         photoPathes = new ArrayList<>();
 
         Spinner prioritiesSpinner = (Spinner) findViewById(R.id.create_record_category_spinner);
-        ArrayList<DOCategory> categories = getCategoriesFromDb();
+        categories = getCategoriesFromDb();
         ArrayAdapter<DOCategory> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
         prioritiesSpinner.setAdapter(arrayAdapter);
 
@@ -83,23 +85,85 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
             }
         });
 
-        Button createButton = (Button) findViewById(R.id.create_record_button);
-        createButton.setOnClickListener(new View.OnClickListener() {
+        Button clearButton = (Button) findViewById(R.id.clear_images_button);
+        clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prepareDataAndInsertIntoDb();
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(intent);
+                clearImages();
             }
         });
+
+        if (getIntent().getBooleanExtra(getString(R.string.edit_activity), false)){
+            mode = getString(R.string.mode_edit);
+        }
+        else {
+            mode = getString(R.string.mode_create);
+        }
+
+        if (mode.equals(getString(R.string.mode_create))) {
+            Button createButton = (Button) findViewById(R.id.create_record_button);
+            createButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    insertIntoDb();
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            Button saveButton = (Button) findViewById(R.id.create_record_button);
+            saveButton.setText(R.string.edit_save_button);
+            saveButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateDb();
+
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                }
+            });
+        }
+
+        if (mode.equals(getString(R.string.mode_edit))){
+            prepareEditActivity(getIntent().getStringExtra(getString(R.string.edit_meeting_json)));
+        }
     }
 
-    private void prepareEditDataAndUpdateDb(String json) {
+    private void prepareEditActivity(String json) {
+        Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
+        CustomRecordObject record = gson.fromJson(json, CustomRecordObject.class);
+
+        EditText descEditText = (EditText) findViewById(R.id.create_record_desc_edittext);
+        descEditText.setText(record.getDesc());
+
+        Spinner categorySpinner = (Spinner) findViewById(R.id.create_record_category_spinner);
+        DOCategory chosenCategory = null;
+        for (DOCategory category : categories) {
+            if (category.getName().equals(record.getCategory())){
+                chosenCategory = category;
+            }
+        }
+        categorySpinner.setSelection(categories.indexOf(chosenCategory));
+
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
+        startTextView.setText(format.format(record.getStartTime()));
+        TextView endTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
+        endTextView.setText(format.format(record.getEndTime()));
+
+        for (String photoPath : record.getPhotos().values()) {
+            addImageOnViewByUri(Uri.parse(photoPath));
+        }
+    }
+
+    private void updateDb() {
+        //prepare
+
 
     }
 
-    private void prepareDataAndInsertIntoDb() {
+    private void insertIntoDb() {
         //prepare
         String desc = ((TextView) findViewById(R.id.create_record_desc_edittext)).getText().toString();
         Spinner spinner = ((Spinner)findViewById(R.id.create_record_category_spinner));
@@ -129,7 +193,6 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
         }
 
         db.close();
-
         verify();
     }
 
@@ -214,6 +277,15 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
 
         cursor.close();
         db.close();
+    }
+
+    private void clearImages() {
+        photoPathes = new ArrayList<>();
+
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.imageviews_layout);
+        if (linearLayout.getChildCount() > 0) {
+            linearLayout.removeAllViews();
+        }
     }
 
     private ArrayList<DOCategory> getCategoriesFromDb() {
@@ -314,24 +386,28 @@ public class CreateOrEditRecordActivity extends AppCompatActivity  {
             case ATTACH_PHOTO:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = intent.getData();
-                    InputStream imageStream = null;
-                    try {
-                        imageStream = getContentResolver().openInputStream(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    Bitmap photo = BitmapFactory.decodeStream(imageStream);
-                    ImageView imageView = new ImageView(this);
-                    imageView.setLayoutParams(new android.view.ViewGroup.LayoutParams(100, 120));
-                    imageView.setImageBitmap(photo);
-                    imageView.setPadding(10, 10, 5, 0);
-                    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.imageviews_layout);
-                    linearLayout.addView(imageView);
-
-                    photoPathes.add(selectedImage.toString());
+                    addImageOnViewByUri(selectedImage);
                 }
         }
+    }
+
+    private void addImageOnViewByUri(Uri uri){
+        InputStream imageStream = null;
+        try {
+            imageStream = getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Bitmap photo = BitmapFactory.decodeStream(imageStream);
+        ImageView imageView = new ImageView(this);
+        imageView.setLayoutParams(new android.view.ViewGroup.LayoutParams(100, 120));
+        imageView.setImageBitmap(photo);
+        imageView.setPadding(10, 10, 5, 0);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.imageviews_layout);
+        linearLayout.addView(imageView);
+
+        photoPathes.add(uri.toString());
     }
 
     /**

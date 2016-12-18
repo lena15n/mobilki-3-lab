@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.lena.timetracker.CreateRecordActivity">
+    tools:context="com.lena.timetracker.CreateOrEditRecordActivity">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/ScrollView01"
@@ -164,10 +164,20 @@
 
                     <Button
                         android:text="@string/record_attach"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:id="@+id/attach_button"/>
+
+                    <Button
+                        android:text="@string/record_delete_images"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/attach_button"
+                        android:layout_alignParentEnd="true"
+                        android:id="@+id/clear_images_button"/>
                 </RelativeLayout>
 
                 <LinearLayout

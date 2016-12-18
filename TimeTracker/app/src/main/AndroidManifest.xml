@@ -21,7 +21,7 @@
         </activity>
         <activity android:name=".ShowRecordActivity">
         </activity>
-        <activity android:name=".CreateRecordActivity">
+        <activity android:name=".CreateOrEditRecordActivity">
         </activity>
     </application>
 

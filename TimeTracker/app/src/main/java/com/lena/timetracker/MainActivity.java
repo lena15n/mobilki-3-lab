@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CreateRecordActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CreateOrEditRecordActivity.class);
                 startActivity(intent);
             }
         });
@@ -183,20 +183,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<CustomRecordObject> prepareRecordsToShow() {
         TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String[] projection = {
-                TimeTrackerContract.Record._ID,
-                TimeTrackerContract.Record.DESCRIPTION,
-                TimeTrackerContract.Record.CATEGORY_ID,
-                TimeTrackerContract.Record.START_TIME,
-                TimeTrackerContract.Record.END_TIME,
-                TimeTrackerContract.Record.TIME
-        };
-
-        // How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                TimeTrackerContract.Record._ID + " ASC";
-
-        Log.d("Mim", TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2);
         Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2,
                 new String[]{});
 
@@ -245,11 +231,6 @@ public class MainActivity extends AppCompatActivity {
                         prevId = id;
                     }
 
-
-                    Log.d("Mir", "Record: id = " + id + ", desc: " + desc + ", start: " + start +
-                            ", end: " + end + ", time: " + time + ", catName: " + categoryName + ", photoId: " +
-                            photoId + ", uri: " + photoUri);
-
                     String str = "";
                     for (String cn : cursor.getColumnNames()) {
                         str = str.concat(cn + " = " + cursor.getString(cursor.getColumnIndex(cn)) + "; ");
@@ -259,20 +240,6 @@ public class MainActivity extends AppCompatActivity {
                 while (cursor.moveToNext());
             }
         }
-
-        /*if (records != null)
-        {
-            for (CustomRecordObject rec : records) {
-                String str = "Photos: ";
-
-                for (Map.Entry<Long, String> entry : rec.getPhotos().entrySet()) {
-                    str = str + "id: " + entry.getKey() + ", uri: " + entry.getValue() + "; ";
-                }
-
-                Log.d("Mimi", "Record: id = " + rec.getId() + ", desc: " + rec.getDesc() + ", start: " + rec.getStartTime() +
-                        ", end: " + rec.getEndTime() + ", time: " + rec.getTime() + ", catName: " + rec.getCategory() + str);
-            }
-        }*/
 
         return records;
     }
