@@ -33,7 +33,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class CreateRecordActivity extends AppCompatActivity  {
+public class CreateOrEditRecordActivity extends AppCompatActivity  {
     private static final int ATTACH_PHOTO = 1;
     private Date startTime;
     private Date endTime;
@@ -43,6 +43,10 @@ public class CreateRecordActivity extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_record);
+
+        if (getIntent().getBooleanExtra(getString(R.string.edit_activity), false)){
+            prepareEditDataAndUpdateDb(getIntent().getStringExtra(getString(R.string.edit_activity)));
+        }
 
         photoPathes = new ArrayList<>();
 
@@ -89,6 +93,10 @@ public class CreateRecordActivity extends AppCompatActivity  {
                 startActivity(intent);
             }
         });
+    }
+
+    private void prepareEditDataAndUpdateDb(String json) {
+
     }
 
     private void prepareDataAndInsertIntoDb() {
