@@ -1,6 +1,8 @@
 package com.lena.timetracker;
 
+import android.app.DatePickerDialog;
 import android.app.FragmentManager;
+import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,8 +41,18 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class CreateOrEditRecordActivity extends AppCompatActivity {
+public class CreateOrEditRecordActivity extends AppCompatActivity
+        implements TimePickerDialog.OnTimeSetListener,
+                   DatePickerDialog.OnDateSetListener {
     private static final int ATTACH_PHOTO = 1;
+
+    private int startYear;
+    private int startMonthOfYear;
+    private int startDayOfMonth;
+    private int endYear;
+    private int endMonthOfYear;
+    private int endDayOfMonth;
+
     private Date startTime;
     private Date endTime;
     private String mode;
@@ -63,9 +76,8 @@ public class CreateOrEditRecordActivity extends AppCompatActivity {
         startTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getFragmentManager();
-                TimePickerFragment timePickerFragment = new TimePickerFragment();
-                timePickerFragment.show(fragmentManager, getString(R.string.record_start));
+                DatePickerFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(getFragmentManager(), getString(R.string.record_start));
             }
         });
 
@@ -73,9 +85,8 @@ public class CreateOrEditRecordActivity extends AppCompatActivity {
         endTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getFragmentManager();
-                TimePickerFragment datePickerFragment = new TimePickerFragment();
-                datePickerFragment.show(fragmentManager, getString(R.string.record_end));
+                DatePickerFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.show(getFragmentManager(), getString(R.string.record_end));
             }
         });
 
@@ -368,40 +379,52 @@ public class CreateOrEditRecordActivity extends AppCompatActivity {
         return categories;
     }
 
-    public void onStartTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(0, 0, 0, hourOfDay, minute);
-        startTime = calendar.getTime();
-        String hourString = Integer.toString(hourOfDay);
-        String minuteString = Integer.toString(minute);
 
-        if (hourOfDay < 10) {
-            hourString = "0" + hourString;
-        }
-        if (minute < 10) {
-            minuteString = "0" + minuteString;
-        }
+    @Override
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        FragmentManager fragmentManager = getFragmentManager();
+        TimePickerFragment timePickerFragment = new TimePickerFragment();
 
-        TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
-        startTextView.setText(hourString + ":" + minuteString);
+        if (fragmentManager.findFragmentByTag(getString(R.string.record_start)) != null) {
+            startYear = year;
+            startMonthOfYear = monthOfYear;
+            startDayOfMonth = dayOfMonth;
+            timePickerFragment.show(fragmentManager, getString(R.string.record_start_time));
+        }
+        else if (fragmentManager.findFragmentByTag(getString(R.string.record_end)) != null) {
+            endYear = year;
+            endMonthOfYear = monthOfYear;
+            endDayOfMonth = dayOfMonth;
+            timePickerFragment.show(fragmentManager, getString(R.string.record_end_time));
+        }
     }
 
-    public void onEndTimeSet(TimePicker view, int hourOfDay, int minute) {
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(0, 0, 0, hourOfDay, minute);
-        endTime = calendar.getTime();
-        String hourString = Integer.toString(hourOfDay);
-        String minuteString = Integer.toString(minute);
+        String hourStr = Integer.toString(hourOfDay);
+        String minuteStr = Integer.toString(minute);
 
         if (hourOfDay < 10) {
-            hourString = "0" + hourString;
+            hourStr = "0" + hourStr;
         }
         if (minute < 10) {
-            minuteString = "0" + minuteString;
+            minuteStr = "0" + minuteStr;
         }
-
-        TextView endTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
-        endTextView.setText(hourString + ":" + minuteString);
+        if (getFragmentManager().findFragmentByTag(getString(R.string.record_start_time)) != null) {
+            calendar.set(startYear, startMonthOfYear, startDayOfMonth, hourOfDay, minute);
+            startTime = calendar.getTime();
+            TextView startDateTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
+            startDateTextView.setText(startDayOfMonth + "." + String.valueOf(startMonthOfYear + 1)
+                    + "." + startYear + " " + hourStr + ":" + minuteStr);
+        }
+        else if (getFragmentManager().findFragmentByTag(getString(R.string.record_end_time)) != null) {
+            calendar.set(endYear, endMonthOfYear, endDayOfMonth, hourOfDay, minute);
+            endTime = calendar.getTime();
+            TextView endDateTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
+            endDateTextView.setText(endDayOfMonth + "." + String.valueOf(endMonthOfYear + 1)
+                    + "." + endYear + " " + hourStr + ":" + minuteStr);
+        }
     }
 
     private void attachImage() {
