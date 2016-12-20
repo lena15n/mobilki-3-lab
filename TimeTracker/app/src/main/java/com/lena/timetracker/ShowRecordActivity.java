@@ -25,6 +25,8 @@ import com.lena.timetracker.db.TimeTrackerDbHelper;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -144,37 +146,25 @@ public class ShowRecordActivity extends AppCompatActivity {
     }
 
     private void setTimePeriodTextView(TextView textView, long timePeriod) {
-        int hour = (int) (timePeriod / 60);
-        int minute = (int) (timePeriod - hour * 60);
-        String hourString = Integer.toString(hour);
-        String minuteString = Integer.toString(minute);
-
-        if (hour < 10) {
-            hourString = "0" + hourString;
+        int day = (int) (timePeriod / (24 * 60));
+        int hour = (int) ((timePeriod - day * 24 * 60) / 60);
+        int minute = (int) (timePeriod - day * 24 * 60 - hour * 60);
+        String dayStr = Integer.toString(day);
+        if (day < 10) {
+            dayStr = "0" + dayStr;
         }
-        if (minute < 10) {
-            minuteString = "0" + minuteString;
-        }
-
-        textView.setText(hourString + ":" + minuteString);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(0, 0, 0, hour, minute);
+        Date temp = calendar.getTime();
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+        textView.setText(dayStr + ":" + dateFormat.format(temp));
     }
 
     private void setTimeTextView(TextView textView, Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy    HH:mm");
+        String dateString = dateFormat.format(date);
 
-        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        String hourString = Integer.toString(hourOfDay);
-        String minuteString = Integer.toString(minute);
-
-        if (hourOfDay < 10) {
-            hourString = "0" + hourString;
-        }
-        if (minute < 10) {
-            minuteString = "0" + minuteString;
-        }
-        textView.setText(hourString + ":" + minuteString);
+        textView.setText(dateString);
     }
 
     private void editRecord(String json) {

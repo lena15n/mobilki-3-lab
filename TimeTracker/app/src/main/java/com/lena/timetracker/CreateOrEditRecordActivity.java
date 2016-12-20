@@ -158,7 +158,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         }
         categorySpinner.setSelection(categories.indexOf(chosenCategory));
 
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy    HH:mm");
         TextView startTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
         startTextView.setText(format.format(record.getStartTime()));
         startTime = record.getStartTime();
@@ -379,7 +379,6 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         return categories;
     }
 
-
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         FragmentManager fragmentManager = getFragmentManager();
@@ -411,19 +410,20 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         if (minute < 10) {
             minuteStr = "0" + minuteStr;
         }
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy    HH:mm");
         if (getFragmentManager().findFragmentByTag(getString(R.string.record_start_time)) != null) {
             calendar.set(startYear, startMonthOfYear, startDayOfMonth, hourOfDay, minute);
             startTime = calendar.getTime();
+            String startDateString = dateFormat.format(startTime);
             TextView startDateTextView = (TextView) findViewById(R.id.create_record_set_start_textview);
-            startDateTextView.setText(startDayOfMonth + "." + String.valueOf(startMonthOfYear + 1)
-                    + "." + startYear + " " + hourStr + ":" + minuteStr);
+            startDateTextView.setText(startDateString);
         }
         else if (getFragmentManager().findFragmentByTag(getString(R.string.record_end_time)) != null) {
             calendar.set(endYear, endMonthOfYear, endDayOfMonth, hourOfDay, minute);
             endTime = calendar.getTime();
+            String endDateString = dateFormat.format(endTime);
             TextView endDateTextView = (TextView) findViewById(R.id.create_record_set_end_textview);
-            endDateTextView.setText(endDayOfMonth + "." + String.valueOf(endMonthOfYear + 1)
-                    + "." + endYear + " " + hourStr + ":" + minuteStr);
+            endDateTextView.setText(endDateString);
         }
     }
 
@@ -481,6 +481,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
      */
     public static long getTimeDiff(Date date1, Date date2) {
         long diffInMillies = date2.getTime() - date1.getTime();
-        return TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        // +1: round up time (because of seconds)
+        return TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS) + 1;
     }
 }
