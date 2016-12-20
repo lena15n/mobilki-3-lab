@@ -19,12 +19,15 @@
     <string name="record_end">End time: </string>
     <string name="record_start_time">Start time tag</string>
     <string name="record_end_time">End time tag</string>
-    <string name="record_time">Time: </string>
+    <string name="record_time">Time (days:hours:minutes): </string>
     <string name="record_tap_to_set_start">(Tap to set start time)</string>
     <string name="record_tap_to_set_end">(Tap to set end time)</string>
     <string name="record_photo">Photo: </string>
     <string name="record_attach">Attach</string>
     <string name="record_delete_images">Clear All</string>
+    <string name="record_time_days">Days: </string>
+    <string name="record_time_hours">Hours: </string>
+    <string name="record_time_minutes">Minutes: </string>
 
     <string name="show_record">Record</string>
     <string name="edit_record_button">Edit</string>
@@ -37,5 +40,9 @@
     <string name="mode_create">create</string>
     <string name="mode_edit">edit</string>
 
+    <string name="stat_for_month">For a month:</string>
+    <string name="stat_no_records">There are no records</string>
+    <string name="stat_period">For period:</string>
+    <string name="choose_period_button">Choose period</string>
 
 </resources>

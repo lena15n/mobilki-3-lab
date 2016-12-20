@@ -64,7 +64,7 @@ public class ShowRecordActivity extends AppCompatActivity {
     }
 
     private CustomRecordObject getRecordFromJSON(String json) {
-        Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
+        Gson gson = new GsonBuilder().setDateFormat(MainActivity.DATE_FORMAT).create();
         return gson.fromJson(json, CustomRecordObject.class);
     }
 

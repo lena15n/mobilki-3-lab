@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String DATE_FORMAT = "yyy-MM-dd'T'HH:mm:ss";
     private ArrayAdapter<CustomRecordObject> arrayAdapter;
 
     @Override
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Context context = getApplicationContext();
                 Intent intent = new Intent(context, ShowRecordActivity.class);
-                Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
+                Gson gson = new GsonBuilder().setDateFormat(MainActivity.DATE_FORMAT).create();
                 intent.putExtra(context.getString(R.string.record), gson.toJson(record));
                 startActivity(intent);
             }
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
                             photos = new HashMap<>();
                             photos.put(photoId, photoUri);
                         }
-                        DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+                        DateFormat dateFormat = new SimpleDateFormat(MainActivity.DATE_FORMAT);
 
                         CustomRecordObject record = null;
                         try {
@@ -257,7 +258,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.action_the_most_frequent: {
-                //
+                Intent intent = new Intent(this, MostFrequentActivitiesActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.action_the_biggest_total_time: {

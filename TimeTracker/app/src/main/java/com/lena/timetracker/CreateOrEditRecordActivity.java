@@ -42,8 +42,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class CreateOrEditRecordActivity extends AppCompatActivity
-        implements TimePickerDialog.OnTimeSetListener,
-                   DatePickerDialog.OnDateSetListener {
+                                                    implements TimePickerDialog.OnTimeSetListener,
+                                                               DatePickerDialog.OnDateSetListener {
     private static final int ATTACH_PHOTO = 1;
 
     private int startYear;
@@ -143,7 +143,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
     }
 
     private void prepareEditActivity(String json) {
-        Gson gson = new GsonBuilder().setDateFormat("yyy-MM-dd'T'HH:mm:ss").create();
+        Gson gson = new GsonBuilder().setDateFormat(MainActivity.DATE_FORMAT).create();
         record = gson.fromJson(json, CustomRecordObject.class);
 
         EditText descEditText = (EditText) findViewById(R.id.create_record_desc_edittext);
@@ -178,7 +178,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         DOCategory category = (DOCategory) spinner.getSelectedItem();
         Log.d("Mi", "Record: " + desc + ", categ: id = " + category.getId() + ", name: " + category.getName());
         long time = getTimeDiff(startTime, endTime);
-        DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat(MainActivity.DATE_FORMAT);
 
         TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -221,7 +221,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         DOCategory category = (DOCategory) spinner.getSelectedItem();
         Log.d("Mi", "Record: " + desc + ", categ: id = " + category.getId() + ", name: " + category.getName());
         long time = getTimeDiff(startTime, endTime);
-        DateFormat dateFormat = new SimpleDateFormat("yyy-MM-dd'T'HH:mm:ss");
+        DateFormat dateFormat = new SimpleDateFormat(MainActivity.DATE_FORMAT);
 
         TimeTrackerDbHelper mDbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -401,15 +401,6 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Calendar calendar = Calendar.getInstance();
-        String hourStr = Integer.toString(hourOfDay);
-        String minuteStr = Integer.toString(minute);
-
-        if (hourOfDay < 10) {
-            hourStr = "0" + hourStr;
-        }
-        if (minute < 10) {
-            minuteStr = "0" + minuteStr;
-        }
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy    HH:mm");
         if (getFragmentManager().findFragmentByTag(getString(R.string.record_start_time)) != null) {
             calendar.set(startYear, startMonthOfYear, startDayOfMonth, hourOfDay, minute);

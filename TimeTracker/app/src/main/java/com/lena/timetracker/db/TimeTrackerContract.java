@@ -64,6 +64,7 @@ public final class TimeTrackerContract {
         public static final String TEMP_PHOTO_ID = "id_photo";
         public static final String TEMP_RECORD_ID = "id_record";
         public static final String TEMP_CATEGORY_ID = "id_category";
+        public static final String TEMP_COLUMN_NAME = "col";
 
 
         public static final String SQL_CREATE_RECORD = "CREATE TABLE " +
@@ -108,6 +109,24 @@ public final class TimeTrackerContract {
                 " ON " + TEMP_TABLE_NAME  + "." + CATEGORY_ID + " = " + Category.TABLE_NAME + "." + Category._ID;
 
         public static final String SQL_DELETE_RECORD = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+        public static final String SQL_SELECT_MOST_FREQUENT = "SELECT " + DESCRIPTION + ", MAX(" +
+                TEMP_COLUMN_NAME + ") FROM (" +
+                "SELECT " + DESCRIPTION + ", COUNT(" +
+                DESCRIPTION + ") AS " + TEMP_COLUMN_NAME +
+                " FROM " + TABLE_NAME +
+                " GROUP BY " + DESCRIPTION + ")";
+
+        public static final String SQL_SELECT_MOST_FREQUENT_IN_PERIOD = "SELECT " + DESCRIPTION
+                + ", MAX(" +
+                TEMP_COLUMN_NAME + ") " +
+                "FROM (" +
+                    "SELECT " + DESCRIPTION + ", COUNT(" +
+                    DESCRIPTION + ") AS " + TEMP_COLUMN_NAME +
+                    " FROM " + TABLE_NAME +
+                    " WHERE " + START_TIME + " BETWEEN ? AND ? OR " +
+                                END_TIME + " BETWEEN ? AND ? " +
+                    " GROUP BY " + DESCRIPTION + ")";
 
         private Record (){}
     }

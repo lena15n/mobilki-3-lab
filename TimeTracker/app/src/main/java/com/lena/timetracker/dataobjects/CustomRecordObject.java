@@ -26,8 +26,6 @@ public class CustomRecordObject {
         else {
             this.photos = photos;
         }
-
-
     }
 
     public long getId() {
