@@ -110,23 +110,22 @@ public final class TimeTrackerContract {
 
         public static final String SQL_DELETE_RECORD = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
-        public static final String SQL_SELECT_MOST_FREQUENT = "SELECT " + DESCRIPTION + ", MAX(" +
-                TEMP_COLUMN_NAME + ") FROM (" +
-                "SELECT " + DESCRIPTION + ", COUNT(" +
-                DESCRIPTION + ") AS " + TEMP_COLUMN_NAME +
-                " FROM " + TABLE_NAME +
-                " GROUP BY " + DESCRIPTION + ")";
-
         public static final String SQL_SELECT_MOST_FREQUENT_IN_PERIOD = "SELECT " + DESCRIPTION
-                + ", MAX(" +
-                TEMP_COLUMN_NAME + ") " +
-                "FROM (" +
-                    "SELECT " + DESCRIPTION + ", COUNT(" +
-                    DESCRIPTION + ") AS " + TEMP_COLUMN_NAME +
-                    " FROM " + TABLE_NAME +
-                    " WHERE " + START_TIME + " BETWEEN ? AND ? OR " +
-                                END_TIME + " BETWEEN ? AND ? " +
-                    " GROUP BY " + DESCRIPTION + ")";
+                + ", COUNT(" + DESCRIPTION + ") AS " + TEMP_COLUMN_NAME +
+                " FROM " + TABLE_NAME +
+                " WHERE " + START_TIME + " BETWEEN ? AND ? OR " +
+                            END_TIME + " BETWEEN ? AND ? " +
+                " GROUP BY " + DESCRIPTION +
+                " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
+
+        public static final String SQL_SELECT_MOST_FREQUENT_FOR_A_MONTH = "SELECT " + DESCRIPTION +
+                ", COUNT(" + DESCRIPTION + ") AS " + TEMP_COLUMN_NAME +
+                " FROM " + TABLE_NAME +
+                " WHERE strftime('%m', " + START_TIME + ") = ? OR " +
+                      " strftime('%m', " + END_TIME + ") = ? " +
+                " GROUP BY " + DESCRIPTION +
+                " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
+
 
         private Record (){}
     }
