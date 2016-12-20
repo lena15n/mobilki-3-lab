@@ -84,7 +84,8 @@ public final class TimeTrackerContract {
                 TEMP_RECORD_ID + COMMA_SEP +
                 TEMP_PHOTO_ID + COMMA_SEP +
                 Photo.URI + COMMA_SEP +
-                Category.NAME +
+                Category.NAME + COMMA_SEP +
+                Category._ID + " AS " + TEMP_CATEGORY_ID +
                 " FROM (" +
                 "SELECT " +
                     TABLE_NAME + "." + DESCRIPTION + COMMA_SEP +
@@ -124,6 +125,28 @@ public final class TimeTrackerContract {
                 " WHERE strftime('%m', " + START_TIME + ") = ? OR " +
                       " strftime('%m', " + END_TIME + ") = ? " +
                 " GROUP BY " + DESCRIPTION +
+                " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
+
+        public static final String SQL_SELECT_MAX_TOTAL_FOR_A_MONTH = "SELECT " +
+                Category.NAME + COMMA_SEP +
+                " SUM(" + TIME + ") AS " + TEMP_COLUMN_NAME + COMMA_SEP +
+                TEMP_CATEGORY_ID +
+                " FROM (  SELECT * " +
+                        " FROM (" + SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2 + ") " +
+                        " WHERE strftime('%m', " + START_TIME + ") = ? OR " +
+                        " strftime('%m', " + END_TIME + ") = ? )" +
+                " GROUP BY " + TEMP_CATEGORY_ID +
+                " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
+
+        public static final String SQL_SELECT_MAX_TOTAL_IN_PERIOD = "SELECT " +
+                Category.NAME + COMMA_SEP +
+                " SUM(" + TIME + ") AS " + TEMP_COLUMN_NAME + COMMA_SEP +
+                TEMP_CATEGORY_ID +
+                " FROM (  SELECT * " +
+                " FROM (" + SQL_LEFT_JOIN_PHOTO_THEN_CATEGORIES2 + ") " +
+                " WHERE " + START_TIME + " BETWEEN ? AND ? OR " +
+                END_TIME + " BETWEEN ? AND ? )" +
+                " GROUP BY " + TEMP_CATEGORY_ID +
                 " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
 
 

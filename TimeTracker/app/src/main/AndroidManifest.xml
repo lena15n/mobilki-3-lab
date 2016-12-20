@@ -26,6 +26,8 @@
         </activity>
         <activity android:name=".MostFrequentActivitiesActivity">
         </activity>
+        <activity android:name=".MaxTotalTimeActivity">
+        </activity>
     </application>
 
 </manifest>
