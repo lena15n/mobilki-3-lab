@@ -41,7 +41,9 @@
     <string name="mode_edit">edit</string>
 
     <string name="stat_for_month">For a month:</string>
+    <string name="button_for_month">For a month</string>
     <string name="stat_no_records">There are no records</string>
+    <string name="stat_no_checked_categories">There are no checked categories</string>
     <string name="stat_period">For period:</string>
     <string name="choose_period_button">Choose period</string>
 

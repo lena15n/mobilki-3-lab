@@ -84,7 +84,7 @@ public class ShowRecordActivity extends AppCompatActivity {
         setTimeTextView(endTextView, endTime);
 
         TextView timeTextView = (TextView) findViewById(R.id.show_record_set_time);
-        setTimePeriodTextView(timeTextView, record.getTime());
+        timeTextView.setText(timePeriodToString(record.getTime()));
 
         addImageViews(record);
     }
@@ -145,7 +145,7 @@ public class ShowRecordActivity extends AppCompatActivity {
         }
     }
 
-    private void setTimePeriodTextView(TextView textView, long timePeriod) {
+    static String timePeriodToString(long timePeriod) {
         int day = (int) (timePeriod / (24 * 60));
         int hour = (int) ((timePeriod - day * 24 * 60) / 60);
         int minute = (int) (timePeriod - day * 24 * 60 - hour * 60);
@@ -157,7 +157,7 @@ public class ShowRecordActivity extends AppCompatActivity {
         calendar.set(0, 0, 0, hour, minute);
         Date temp = calendar.getTime();
         DateFormat dateFormat = new SimpleDateFormat("HH:mm");
-        textView.setText(dayStr + ":" + dateFormat.format(temp));
+        return dayStr + ":" + dateFormat.format(temp);
     }
 
     private void setTimeTextView(TextView textView, Date date) {

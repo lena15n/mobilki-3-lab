@@ -127,7 +127,7 @@ public final class TimeTrackerContract {
                 " GROUP BY " + DESCRIPTION +
                 " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
 
-        public static final String SQL_SELECT_MAX_TOTAL_FOR_A_MONTH = "SELECT " +
+        public static final String SQL_SELECT_MAX_TOTAL_FOR_A_MONTH = "SELECT * FROM (SELECT " +
                 Category.NAME + COMMA_SEP +
                 " SUM(" + TIME + ") AS " + TEMP_COLUMN_NAME + COMMA_SEP +
                 TEMP_CATEGORY_ID +
@@ -136,9 +136,9 @@ public final class TimeTrackerContract {
                         " WHERE strftime('%m', " + START_TIME + ") = ? OR " +
                         " strftime('%m', " + END_TIME + ") = ? )" +
                 " GROUP BY " + TEMP_CATEGORY_ID +
-                " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
+                " ORDER BY " + TEMP_COLUMN_NAME + " DESC)";
 
-        public static final String SQL_SELECT_MAX_TOTAL_IN_PERIOD = "SELECT " +
+        public static final String SQL_SELECT_MAX_TOTAL_IN_PERIOD = "SELECT * FROM (SELECT " +
                 Category.NAME + COMMA_SEP +
                 " SUM(" + TIME + ") AS " + TEMP_COLUMN_NAME + COMMA_SEP +
                 TEMP_CATEGORY_ID +
@@ -147,7 +147,7 @@ public final class TimeTrackerContract {
                 " WHERE " + START_TIME + " BETWEEN ? AND ? OR " +
                 END_TIME + " BETWEEN ? AND ? )" +
                 " GROUP BY " + TEMP_CATEGORY_ID +
-                " ORDER BY " + TEMP_COLUMN_NAME + " DESC";
+                " ORDER BY " + TEMP_COLUMN_NAME + " DESC)";
 
 
         private Record (){}

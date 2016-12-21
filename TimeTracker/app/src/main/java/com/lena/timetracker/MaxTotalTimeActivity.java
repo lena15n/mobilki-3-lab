@@ -92,6 +92,9 @@ public class MaxTotalTimeActivity extends AppCompatActivity
 
         TextView descTextView = (TextView) findViewById(R.id.max_desc_textView);
         descTextView.setText(sb.toString());
+
+        TextView periodTextView = (TextView) findViewById(R.id.max_period_textView);
+        periodTextView.setText(getString(R.string.stat_for_month));
     }
 
     private void calculateMaxTotal() {
@@ -195,7 +198,7 @@ public class MaxTotalTimeActivity extends AppCompatActivity
             calendar.set(endYear, endMonthOfYear, endDayOfMonth, hourOfDay, minute);
             endDate = calendar.getTime();
             String endDateString = dateFormat.format(endDate);
-            TextView endDateTextView = (TextView) findViewById(R.id.freq_set_end_textview);
+            TextView endDateTextView = (TextView) findViewById(R.id.max_record_set_end_textview);
             endDateTextView.setText(endDateString);
         }
     }

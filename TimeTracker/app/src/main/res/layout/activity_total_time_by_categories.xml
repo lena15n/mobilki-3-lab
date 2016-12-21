@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_total_time_by_categories"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.lena.timetracker.TotalTimeByCategoriesActivity">
+
+
+    <RelativeLayout
+        android:id="@+id/total_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/total_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ListView
+                android:id="@+id/total_listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/ScrollView01"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_below="@+id/total_layout2">
+
+            <RelativeLayout
+                android:id="@+id/total_layout5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp">
+
+                <RelativeLayout
+                    android:id="@+id/total_layout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/total_start_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingEnd="8dp"
+                        android:text="@string/record_start"/>
+
+                    <TextView
+                        android:id="@+id/total_record_set_start_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="13dp"
+                        android:text="@string/record_tap_to_set_start"/>
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/total_layout4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/total_layout3"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:id="@+id/total_end_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingEnd="8dp"
+                        android:text="@string/record_end"/>
+
+                    <TextView
+                        android:id="@+id/total_set_end_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginBottom="13dp"
+                        android:text="@string/record_tap_to_set_end"/>
+
+                </RelativeLayout>
+
+
+                <Button
+                    android:id="@+id/choose_period_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_below="@+id/total_layout4"
+                    android:text="@string/choose_period_button"/>
+
+                <Button
+                    android:id="@+id/for_a_month_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_below="@+id/total_layout4"
+                    android:text="@string/button_for_month"/>
+
+                <TextView
+                    android:id="@+id/total_period_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/choose_period_button"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/stat_for_month"/>
+
+                <TextView
+                    android:id="@+id/total_result_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/total_period_textView"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="5dp"
+                    style="@style/FontStat"
+                    android:text="@string/stat_no_records"/>
+
+                <TextView
+                    android:id="@+id/total_sum_result_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/total_period_textView"
+                    android:layout_marginTop="5dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="20dp"
+                    style="@style/FontStat"/>
+
+            </RelativeLayout>
+        </ScrollView>
+    </RelativeLayout>
+
+</RelativeLayout>

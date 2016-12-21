@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -68,7 +69,7 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         photoPathes = new ArrayList<>();
 
         Spinner prioritiesSpinner = (Spinner) findViewById(R.id.create_record_category_spinner);
-        categories = getCategoriesFromDb();
+        categories = getCategoriesFromDb(this);
         ArrayAdapter<DOCategory> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_item, categories);
         prioritiesSpinner.setAdapter(arrayAdapter);
 
@@ -338,10 +339,10 @@ public class CreateOrEditRecordActivity extends AppCompatActivity
         }
     }
 
-    private ArrayList<DOCategory> getCategoriesFromDb() {
+    public static ArrayList<DOCategory> getCategoriesFromDb(Context context) {
         ArrayList<DOCategory> categories = new ArrayList<>();
 
-        TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
+        TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] projection = {
                 TimeTrackerContract.Category._ID,

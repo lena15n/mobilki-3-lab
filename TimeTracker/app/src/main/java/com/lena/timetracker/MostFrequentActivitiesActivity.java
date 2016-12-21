@@ -91,6 +91,9 @@ public class MostFrequentActivitiesActivity extends AppCompatActivity
         }
         TextView descTextView = (TextView) findViewById(R.id.freq_desc_textView);
         descTextView.setText(sb.toString());
+
+        TextView periodTextView = (TextView) findViewById(R.id.freq_period_textView);
+        periodTextView.setText(getString(R.string.stat_for_month));
     }
 
     private void calculateMostFrequent() {

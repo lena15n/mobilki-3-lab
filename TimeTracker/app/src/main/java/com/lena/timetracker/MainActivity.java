@@ -33,6 +33,7 @@ import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     public static final String DATE_FORMAT = "yyy-MM-dd'T'HH:mm:ss";
+    public static final String LOG_TAG = "~Mimi~";
     private ArrayAdapter<CustomRecordObject> arrayAdapter;
 
     @Override
@@ -170,11 +171,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_the_biggest_total_time: {
                 Intent intent = new Intent(this, MaxTotalTimeActivity.class);
                 startActivity(intent);
-
             }
             break;
             case R.id.action_total_time_by_selected_categories: {
-
+                Intent intent = new Intent(this, TotalTimeByCategoriesActivity.class);
+                startActivity(intent);
             }
             break;
             case R.id.action_total_time: {

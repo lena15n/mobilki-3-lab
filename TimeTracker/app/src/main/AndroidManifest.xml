@@ -28,6 +28,8 @@
         </activity>
         <activity android:name=".MaxTotalTimeActivity">
         </activity>
+        <activity android:name=".TotalTimeByCategoriesActivity">
+        </activity>
     </application>
 
 </manifest>
