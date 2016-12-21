@@ -46,5 +46,13 @@
     <string name="stat_no_checked_categories">There are no checked categories</string>
     <string name="stat_period">For period:</string>
     <string name="choose_period_button">Choose period</string>
+    <string name="chart_header">Pie diagram for</string>
+    <string name="ok_button_text">OK</string>
+    <string name="data_for_chart">data</string>
+    <string name="desc_for_chart">desc</string>
+    <string name="header_chart_params">Choose time period:</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

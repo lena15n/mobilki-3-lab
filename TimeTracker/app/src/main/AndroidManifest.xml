@@ -30,6 +30,10 @@
         </activity>
         <activity android:name=".TotalTimeByCategoriesActivity">
         </activity>
+        <activity android:name=".PieDiagramActivity">
+        </activity>
+        <activity android:name=".ShowChartActivity">
+        </activity>
     </application>
 
 </manifest>

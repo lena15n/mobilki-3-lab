@@ -179,7 +179,8 @@ public class MainActivity extends AppCompatActivity {
             }
             break;
             case R.id.action_total_time: {
-
+                Intent intent = new Intent(this, PieDiagramActivity.class);
+                startActivity(intent);
             }
             break;
         }
