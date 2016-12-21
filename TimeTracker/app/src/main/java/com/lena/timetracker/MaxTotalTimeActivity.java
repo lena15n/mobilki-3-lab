@@ -52,7 +52,7 @@ public class MaxTotalTimeActivity extends AppCompatActivity
             }
         });
 
-        TextView endTextView = (TextView) findViewById(R.id.total_set_end_textview);
+        TextView endTextView = (TextView) findViewById(R.id.max_record_set_end_textview);
         endTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +90,7 @@ public class MaxTotalTimeActivity extends AppCompatActivity
             sb.append(getString(R.string.stat_no_records));
         }
 
-        TextView descTextView = (TextView) findViewById(R.id.max_desc_textView);
+        TextView descTextView = (TextView) findViewById(R.id.max_result_textView);
         descTextView.setText(sb.toString());
 
         TextView periodTextView = (TextView) findViewById(R.id.max_period_textView);
@@ -99,7 +99,7 @@ public class MaxTotalTimeActivity extends AppCompatActivity
 
     private void calculateMaxTotal() {
         if (startDate != null && endDate != null) {
-            TextView textView = (TextView) findViewById(R.id.max_desc_textView);
+            TextView textView = (TextView) findViewById(R.id.max_result_textView);
             StringBuilder sb = new StringBuilder();
             int i = 1;
             ArrayList<String> activities = getRecordsNamesFromDb(startDate, endDate);

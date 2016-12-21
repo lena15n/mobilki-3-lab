@@ -42,6 +42,10 @@
 
     <string name="stat_for_month">For a month:</string>
     <string name="button_for_month">For a month</string>
+    <string name="stat_freq_header">Most frequent activities</string>
+    <string name="stat_max_header">Max total time by categories</string>
+    <string name="stat_total_header">Total time by selected categories</string>
+    <string name="stat_chart_header">Pie chart of time by all categories</string>
     <string name="stat_no_records">There are no records</string>
     <string name="stat_no_checked_categories">There are no any checked categories</string>
     <string name="stat_">Choose time period:</string>

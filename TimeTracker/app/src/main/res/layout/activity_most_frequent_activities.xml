@@ -11,6 +11,29 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.lena.timetracker.MostFrequentActivitiesActivity">
 
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/ScrollView01"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+        <RelativeLayout
+            android:id="@+id/total_layout5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="40dp">
+
+            <TextView
+                android:text="@string/stat_freq_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="15dp"
+                style="@style/FontHeader"
+                android:id="@+id/textView"/>
+
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,15 +49,25 @@
             android:id="@+id/freq_period_textView"/>
 
         <TextView
-            android:text="TextView"
+            android:id="@+id/freq_result_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/freq_period_textView"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="50dp"
+            android:layout_below="@id/freq_period_textView"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="5dp"
             style="@style/FontStat"
-            android:id="@+id/freq_desc_textView"/>
+            android:text="@string/stat_no_records"/>
+
+        <TextView
+            android:id="@+id/freq_sum_result_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/freq_period_textView"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            style="@style/FontStat"/>
 
     </RelativeLayout>
 
@@ -100,5 +133,8 @@
         android:layout_below="@+id/freq_layout4"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="39dp"/>
+
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

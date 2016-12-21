@@ -12,15 +12,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.lena.timetracker.db.TimeTrackerContract;
 import com.lena.timetracker.db.TimeTrackerDbHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MostFrequentActivitiesActivity extends AppCompatActivity
         implements TimePickerDialog.OnTimeSetListener,
@@ -77,20 +79,26 @@ public class MostFrequentActivitiesActivity extends AppCompatActivity
         String temp = dateFormat.format(currDate);
         String month = temp.substring(temp.indexOf("-") + 1, temp.lastIndexOf("-"));
 
-        ArrayList<String> activities = getRecordsNamesFromDb(month);
-        StringBuilder sb = new StringBuilder();
+        LinkedHashMap<String, Long> activities = getRecordsNamesFromDb(month);
+        StringBuilder sbDescription = new StringBuilder();
+        StringBuilder sbTime = new StringBuilder();
 
         if (activities.size() != 0) {
             int i = 1;
-            for (String activity : activities) {
-                sb.append("" + i + ". " + activity + "\n");
+            for (Map.Entry<String, Long> recordSumTime : activities.entrySet()) {
+                sbDescription.append("" + i + ". " + recordSumTime.getKey() + "\n");
+                sbTime.append(recordSumTime.getValue() + "\n");
                 i++;
             }
         } else {
-            sb.append(getString(R.string.stat_no_records));
+            sbDescription.append(getString(R.string.stat_no_records));
         }
-        TextView descTextView = (TextView) findViewById(R.id.freq_desc_textView);
-        descTextView.setText(sb.toString());
+
+        TextView descTextView = (TextView) findViewById(R.id.freq_result_textView);
+        descTextView.setText(sbDescription.toString());
+
+        TextView timeTextView = (TextView) findViewById(R.id.freq_sum_result_textView);
+        timeTextView.setText(sbTime.toString());
 
         TextView periodTextView = (TextView) findViewById(R.id.freq_period_textView);
         periodTextView.setText(getString(R.string.stat_for_month));
@@ -98,30 +106,41 @@ public class MostFrequentActivitiesActivity extends AppCompatActivity
 
     private void calculateMostFrequent() {
         if (startDate != null && endDate != null) {
-            TextView textView = (TextView) findViewById(R.id.freq_desc_textView);
-            StringBuilder sb = new StringBuilder();
-            int i = 1;
-            ArrayList<String> activities = getRecordsNamesFromDb(startDate, endDate);
+            LinkedHashMap<String, Long> activities = getRecordsNamesFromDb(startDate, endDate);
+            StringBuilder sbDescription = new StringBuilder();
+            StringBuilder sbTime = new StringBuilder();
+
             if (activities.size() != 0) {
-                for (String activity : activities) {
-                    sb.append("" + i + ". " + activity + "\n");
+                int i = 1;
+                for (Map.Entry<String, Long> recordSumTime : activities.entrySet()) {
+                    sbDescription.append("" + i + ". " + recordSumTime.getKey() + "\n");
+                    sbTime.append(recordSumTime.getValue() + "\n");
                     i++;
                 }
             } else {
-                sb.append(getString(R.string.stat_no_records));
+                sbDescription.append(getString(R.string.stat_no_records));
             }
-            textView.setText(sb.toString());
 
-            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
-            TextView periodTextView = (TextView) findViewById(R.id.freq_period_textView);
-            periodTextView.setText(getString(R.string.stat_period) + "  " + dateFormat.format(startDate)
-                    + "    -   " + dateFormat.format(endDate));
+            TextView descTextView = (TextView) findViewById(R.id.freq_result_textView);
+            descTextView.setText(sbDescription.toString());
+
+            TextView timeTextView = (TextView) findViewById(R.id.freq_sum_result_textView);
+            timeTextView.setText(sbTime.toString());
         }
+        else {
+            Toast.makeText(this, R.string.stat_no_checked_categories, Toast.LENGTH_LONG).show();
+        }
+
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
+        TextView periodTextView = (TextView) findViewById(R.id.freq_period_textView);
+        periodTextView.setText(getString(R.string.stat_period) + "  " + dateFormat.format(startDate)
+                + "    -   " + dateFormat.format(endDate));
     }
 
-    private ArrayList<String> getRecordsNamesFromDb(String month) {
-        ArrayList<String> activities = new ArrayList<>();
+    private LinkedHashMap<String, Long> getRecordsNamesFromDb(String month) {
+        LinkedHashMap<String, Long> result = new LinkedHashMap<>();
         String desc;
+        long count;
         TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_SELECT_MOST_FREQUENT_FOR_A_MONTH,
@@ -130,20 +149,22 @@ public class MostFrequentActivitiesActivity extends AppCompatActivity
             if (cursor.moveToFirst()) {
                 do {
                     desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.DESCRIPTION));
+                    count = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_COLUMN_NAME));
                     if (desc != null) {
-                        activities.add(desc);
+                        result.put(desc, count);
                     }
                 }
                 while (cursor.moveToNext());
             }
         }
 
-        return activities;
+        return result;
     }
 
-    private ArrayList<String> getRecordsNamesFromDb(Date dateStart, Date dateEnd) {
-        ArrayList<String> activities = new ArrayList<>();
+    private LinkedHashMap<String, Long> getRecordsNamesFromDb(Date dateStart, Date dateEnd) {
+        LinkedHashMap<String, Long> activities = new LinkedHashMap<>();
         String desc;
+        Long count;
         TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         DateFormat dateFormat = new SimpleDateFormat(MainActivity.DATE_FORMAT);
@@ -154,8 +175,9 @@ public class MostFrequentActivitiesActivity extends AppCompatActivity
             if (cursor.moveToFirst()) {
                 do {
                     desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Record.DESCRIPTION));
+                    count = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_COLUMN_NAME));
                     if (desc != null) {
-                        activities.add(desc);
+                        activities.put(desc, count);
                     }
                 }
                 while (cursor.moveToNext());
