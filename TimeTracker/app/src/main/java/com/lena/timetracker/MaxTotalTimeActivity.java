@@ -12,15 +12,17 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.lena.timetracker.db.TimeTrackerContract;
 import com.lena.timetracker.db.TimeTrackerDbHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MaxTotalTimeActivity extends AppCompatActivity
         implements TimePickerDialog.OnTimeSetListener,
@@ -77,21 +79,26 @@ public class MaxTotalTimeActivity extends AppCompatActivity
         String temp = dateFormat.format(currDate);
         String month = temp.substring(temp.indexOf("-") + 1, temp.lastIndexOf("-"));
 
-        ArrayList<String> activities = getRecordsNamesFromDb(month);
-        StringBuilder sb = new StringBuilder();
+        LinkedHashMap<String, Long> data = getDataFromDb(month);
+        StringBuilder sbCategory = new StringBuilder();
+        StringBuilder sbTime = new StringBuilder();
 
-        if (activities.size() != 0) {
+        if (data.size() != 0) {
             int i = 1;
-            for (String activity : activities) {
-                sb.append("" + i + ". " + activity + "\n");
+            for (Map.Entry<String, Long> categorySum : data.entrySet()) {
+                sbCategory.append("" + i + ". " + categorySum.getKey() + "\n");
+                sbTime.append(ShowRecordActivity.timePeriodToString(categorySum.getValue()) + "\n");
                 i++;
             }
         } else {
-            sb.append(getString(R.string.stat_no_records));
+            sbCategory.append(getString(R.string.stat_no_records));
         }
 
-        TextView descTextView = (TextView) findViewById(R.id.max_result_textView);
-        descTextView.setText(sb.toString());
+        TextView categTextView = (TextView) findViewById(R.id.max_result_textView);
+        categTextView.setText(sbCategory.toString());
+
+        TextView timeTextView = (TextView) findViewById(R.id.max_sum_result_textView);
+        timeTextView.setText(sbTime.toString());
 
         TextView periodTextView = (TextView) findViewById(R.id.max_period_textView);
         periodTextView.setText(getString(R.string.stat_for_month));
@@ -99,30 +106,41 @@ public class MaxTotalTimeActivity extends AppCompatActivity
 
     private void calculateMaxTotal() {
         if (startDate != null && endDate != null) {
-            TextView textView = (TextView) findViewById(R.id.max_result_textView);
-            StringBuilder sb = new StringBuilder();
-            int i = 1;
-            ArrayList<String> activities = getRecordsNamesFromDb(startDate, endDate);
-            if (activities.size() != 0) {
-                for (String activity : activities) {
-                    sb.append("" + i + ". " + activity + "\n");
+            LinkedHashMap<String, Long> data = getDataFromDb(startDate, endDate);
+            StringBuilder sbCategory = new StringBuilder();
+            StringBuilder sbTime = new StringBuilder();
+
+            if (data.size() != 0) {
+                int i = 1;
+                for (Map.Entry<String, Long> categorySum : data.entrySet()) {
+                    sbCategory.append("" + i + ". " + categorySum.getKey() + "\n");
+                    sbTime.append(ShowRecordActivity.timePeriodToString(categorySum.getValue()) + "\n");
                     i++;
                 }
             } else {
-                sb.append(getString(R.string.stat_no_records));
+                sbCategory.append(getString(R.string.stat_no_records));
             }
-            textView.setText(sb.toString());
+
+            TextView categTextView = (TextView) findViewById(R.id.max_result_textView);
+            categTextView.setText(sbCategory.toString());
+
+            TextView timeTextView = (TextView) findViewById(R.id.max_sum_result_textView);
+            timeTextView.setText(sbTime.toString());
 
             DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
             TextView periodTextView = (TextView) findViewById(R.id.max_period_textView);
             periodTextView.setText(getString(R.string.stat_period) + "  " + dateFormat.format(startDate)
                     + "    -   " + dateFormat.format(endDate));
         }
+        else {
+            Toast.makeText(this, R.string.record_time_not_set, Toast.LENGTH_LONG).show();
+        }
     }
 
-    private ArrayList<String> getRecordsNamesFromDb(String month) {
-        ArrayList<String> activities = new ArrayList<>();
-        String desc;
+    private LinkedHashMap<String, Long> getDataFromDb(String month) {
+        LinkedHashMap<String, Long> activities = new LinkedHashMap<>();
+        String category;
+        long count;
         TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(TimeTrackerContract.Record.SQL_SELECT_MAX_TOTAL_FOR_A_MONTH,
@@ -130,9 +148,10 @@ public class MaxTotalTimeActivity extends AppCompatActivity
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
-                    if (desc != null) {
-                        activities.add(desc);
+                    category = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
+                    count = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_COLUMN_NAME));
+                    if (category != null) {
+                        activities.put(category, count);
                     }
                 }
                 while (cursor.moveToNext());
@@ -142,9 +161,10 @@ public class MaxTotalTimeActivity extends AppCompatActivity
         return activities;
     }
 
-    private ArrayList<String> getRecordsNamesFromDb(Date dateStart, Date dateEnd) {
-        ArrayList<String> activities = new ArrayList<>();
-        String desc;
+    private LinkedHashMap<String, Long> getDataFromDb(Date dateStart, Date dateEnd) {
+        LinkedHashMap<String, Long> activities = new LinkedHashMap<>();
+        String category;
+        long count;
         TimeTrackerDbHelper dbHelper = new TimeTrackerDbHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         DateFormat dateFormat = new SimpleDateFormat(MainActivity.DATE_FORMAT);
@@ -154,9 +174,10 @@ public class MaxTotalTimeActivity extends AppCompatActivity
         if (cursor != null) {
             if (cursor.moveToFirst()) {
                 do {
-                    desc = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
-                    if (desc != null) {
-                        activities.add(desc);
+                    category = cursor.getString(cursor.getColumnIndex(TimeTrackerContract.Category.NAME));
+                    count = cursor.getLong(cursor.getColumnIndex(TimeTrackerContract.Record.TEMP_COLUMN_NAME));
+                    if (category != null) {
+                        activities.put(category, count);
                     }
                 }
                 while (cursor.moveToNext());

@@ -2,11 +2,6 @@
     <string name="app_name">TimeTracker</string>
     <string name="app_header">Time Tracker</string>
 
-    <string name="action_the_most_frequent">The most frequent activities</string>
-    <string name="action_the_biggest_total_time">The biggest total time of all categories</string>
-    <string name="action_total_time_by_selected_categories">The biggest total time by selected categories</string>
-    <string name="action_total_time">The total time of all categories</string>
-
     <string name="main_header">Statistics</string>
 
     <string name="create_record">Create new record</string>
@@ -19,6 +14,7 @@
     <string name="record_end">End time: </string>
     <string name="record_start_time">Start time tag</string>
     <string name="record_end_time">End time tag</string>
+
     <string name="record_time">Time (days:hours:minutes): </string>
     <string name="record_tap_to_set_start">(Tap to set start time)</string>
     <string name="record_tap_to_set_end">(Tap to set end time)</string>
@@ -28,6 +24,7 @@
     <string name="record_time_days">Days: </string>
     <string name="record_time_hours">Hours: </string>
     <string name="record_time_minutes">Minutes: </string>
+    <string name="record_time_not_set">Please set period of time</string>
 
     <string name="show_record">Record</string>
     <string name="edit_record_button">Edit</string>
@@ -43,8 +40,10 @@
     <string name="stat_for_month">For a month:</string>
     <string name="button_for_month">For a month</string>
     <string name="stat_freq_header">Most frequent activities</string>
-    <string name="stat_max_header">Max total time by categories</string>
-    <string name="stat_total_header">Total time by selected categories</string>
+    <string name="stat_max_header">Max total time by categories\n\t\t\t(days:hours:minutes)</string>
+    <string name="stat_total_header">Total time by selected categories\n\t\t\t\t\t\t\t(days:hours:minutes)</string>
+    <string name="stat_max_header_main">Max total time by categories</string>
+    <string name="stat_total_header_main">Total time by selected categories</string>
     <string name="stat_chart_header">Pie chart of time by all categories</string>
     <string name="stat_no_records">There are no records</string>
     <string name="stat_no_checked_categories">There are no any checked categories</string>

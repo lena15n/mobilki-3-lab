@@ -137,6 +137,8 @@ public class PieDiagramActivity extends AppCompatActivity implements TimePickerD
             else {
                 Toast.makeText(this, R.string.stat_no_records, Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(this, R.string.record_time_not_set, Toast.LENGTH_LONG).show();
         }
     }
 

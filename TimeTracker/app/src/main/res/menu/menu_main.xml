@@ -5,24 +5,24 @@
     <item
         android:id="@+id/action_the_most_frequent"
         android:orderInCategory="100"
-        android:title="@string/action_the_most_frequent"
+        android:title="@string/stat_freq_header"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_the_biggest_total_time"
         android:orderInCategory="100"
-        android:title="@string/action_the_biggest_total_time"
+        android:title="@string/stat_max_header_main"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_total_time_by_selected_categories"
         android:orderInCategory="100"
-        android:title="@string/action_total_time_by_selected_categories"
+        android:title="@string/stat_total_header_main"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/action_total_time"
         android:orderInCategory="100"
-        android:title="@string/action_total_time"
+        android:title="@string/stat_chart_header"
         app:showAsAction="never"/>
 </menu>

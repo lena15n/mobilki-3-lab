@@ -226,15 +226,17 @@ public class TotalTimeByCategoriesActivity extends AppCompatActivity
 
                 TextView timeTextView = (TextView) findViewById(R.id.total_sum_result_textView);
                 timeTextView.setText(sbTime.toString());
+
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
+                TextView periodTextView = (TextView) findViewById(R.id.total_period_textView);
+                periodTextView.setText(getString(R.string.stat_period) + "  " + dateFormat.format(startDate)
+                        + "    -   " + dateFormat.format(endDate));
             }
             else {
                 Toast.makeText(this, R.string.stat_no_checked_categories, Toast.LENGTH_LONG).show();
             }
-
-            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
-            TextView periodTextView = (TextView) findViewById(R.id.total_period_textView);
-            periodTextView.setText(getString(R.string.stat_period) + "  " + dateFormat.format(startDate)
-                    + "    -   " + dateFormat.format(endDate));
+        } else {
+            Toast.makeText(this, R.string.record_time_not_set, Toast.LENGTH_LONG).show();
         }
     }
 
