@@ -71,7 +71,7 @@ public class PieDiagramActivity extends AppCompatActivity implements TimePickerD
         choosePeriodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //showPieChart();
+                showPieChart();
             }
         });
 
@@ -102,55 +102,43 @@ public class PieDiagramActivity extends AppCompatActivity implements TimePickerD
             Intent intent = new Intent(this, ShowChartActivity.class);
             Bundle extras = new Bundle();
             extras.putString(getString(R.string.data_for_chart), new Gson().toJson(data, type));
-            extras.putString("      " + getString(R.string.desc_for_chart), getString(R.string.chart_header) + " a month");
+            extras.putString(getString(R.string.desc_for_chart), getString(R.string.chart_header) + " a month");
             intent.putExtras(extras);
             startActivity(intent);
         }
         else {
-            Toast.makeText(this, R.string.stat_no_checked_categories, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.stat_no_records, Toast.LENGTH_LONG).show();
         }
     }
 
 
-   /* private void showPieChart() {
+    private void showPieChart() {
         if (startDate != null && endDate != null) {
-            ArrayList<DOCategory> tempCategories = customArrayAdapter.getAllChecked();
+            ArrayList<DOCategory> tempCategories = CreateOrEditRecordActivity.getCategoriesFromDb(this);
             if (tempCategories.size() > 0) {
                 ArrayList<Long> ids = new ArrayList<>();
                 for (DOCategory tempCategory : tempCategories) {
                     ids.add(tempCategory.getId());
                 }
                 LinkedHashMap<String, Long> data = getDataFromDb(startDate, endDate, ids);
-                StringBuilder sbCategory = new StringBuilder();
-                StringBuilder sbTime = new StringBuilder();
+                Type type = new TypeToken<LinkedHashMap<String, Long>>(){}.getType();
 
-                if (data.size() != 0) {
-                    int i = 1;
-                    for (Map.Entry<String, Long> categorySum : data.entrySet()) {
-                        sbCategory.append("" + i + ". " + categorySum.getKey() + "\n");
-                        sbTime.append(ShowRecordActivity.timePeriodToString(categorySum.getValue()) + "\n");
-                        i++;
-                    }
-                } else {
-                    sbCategory.append(getString(R.string.stat_no_records));
-                }
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
+                String description = getString(R.string.chart_header) + " period: \n" + dateFormat.format(startDate) +
+                        "    -    " + dateFormat.format(endDate);
 
-                TextView categTextView = (TextView) findViewById(R.id.chart_result_textView);
-                categTextView.setText(sbCategory.toString());
-
-                TextView timeTextView = (TextView) findViewById(R.id.chart_sum_result_textView);
-                timeTextView.setText(sbTime.toString());
+                Intent intent = new Intent(this, ShowChartActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString(getString(R.string.data_for_chart), new Gson().toJson(data, type));
+                extras.putString(getString(R.string.desc_for_chart), description);
+                intent.putExtras(extras);
+                startActivity(intent);
             }
             else {
-                Toast.makeText(this, R.string.stat_no_checked_categories, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.stat_no_records, Toast.LENGTH_LONG).show();
             }
-
-            DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy  HH:mm");
-            TextView periodTextView = (TextView) findViewById(R.id.chart_period_textView);
-            periodTextView.setText(getString(R.string.stat_period) + "  " + dateFormat.format(startDate)
-                    + "    -   " + dateFormat.format(endDate));
         }
-    }*/
+    }
 
     private LinkedHashMap<String, Long> getDataFromDb(String month, ArrayList<Long> categoriesIds) {
         LinkedHashMap<String, Long> result = new LinkedHashMap<>();

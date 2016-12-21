@@ -52,7 +52,7 @@ public class MaxTotalTimeActivity extends AppCompatActivity
             }
         });
 
-        TextView endTextView = (TextView) findViewById(R.id.freq_set_end_textview);
+        TextView endTextView = (TextView) findViewById(R.id.total_set_end_textview);
         endTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

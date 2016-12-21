@@ -34,8 +34,10 @@ public class ShowChartActivity extends AppCompatActivity {
         String jsonData = savedInstanceState.getString(getString(R.string.data_for_chart));
         String descriptionForChart = savedInstanceState.getString(getString(R.string.desc_for_chart));
 
+        Toast.makeText(this, descriptionForChart, Toast.LENGTH_LONG).show();
+
         mChart = (PieChart) findViewById(R.id.chart);
-        mChart.setDescription(descriptionForChart);
+        mChart.setDescription("");//"\n\n" + descriptionForChart);
         mChart.setRotationEnabled(true);
         mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -54,7 +56,7 @@ public class ShowChartActivity extends AppCompatActivity {
             }
         });
 
-        setDataForPieChart(decodeData(jsonData), descriptionForChart);
+        setDataForPieChart(decodeData(jsonData), "");
     }
 
     private LinkedHashMap<String, Long> decodeData(String json) {
@@ -63,7 +65,7 @@ public class ShowChartActivity extends AppCompatActivity {
         return gson.fromJson(json, collectionType);
     }
 
-    public void setDataForPieChart(LinkedHashMap<String, Long> categories, String descriptionForChart) {
+    public void setDataForPieChart(LinkedHashMap<String, Long> categories, String str) {
         ArrayList<Entry> yValues = new ArrayList<>();
 
         int i = 0;
@@ -79,7 +81,7 @@ public class ShowChartActivity extends AppCompatActivity {
             i++;
         }
         // create pieDataSet
-        PieDataSet dataSet = new PieDataSet(yValues, descriptionForChart);//""
+        PieDataSet dataSet = new PieDataSet(yValues, str);
         dataSet.setSliceSpace(0);
         dataSet.setSelectionShift(10);//5
         dataSet.setColors(ColorTemplate.JOYFUL_COLORS);
