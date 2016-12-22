@@ -22,6 +22,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.lena.timetracker.dataobjects.DOCategory;
+import com.lena.timetracker.date.time.DatePickerFragment;
+import com.lena.timetracker.date.time.TimePickerFragment;
 import com.lena.timetracker.db.TimeTrackerContract;
 import com.lena.timetracker.db.TimeTrackerDbHelper;
 

@@ -1,4 +1,4 @@
-package com.lena.timetracker;
+package com.lena.timetracker.date.time;
 
 import android.app.Dialog;
 import android.app.DialogFragment;
